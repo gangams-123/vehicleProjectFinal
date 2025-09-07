@@ -1,0 +1,239 @@
+<form [formGroup]="officialForm" class="form-container" (ngSubmit)="onSubmit()" *ngIf="!view">
+
+  <div class="form-row">
+    <div class="form-field">
+      <label>First Name</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="fname" placeholder="Enter first name">
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+      <label>Middle Name</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="mname" placeholder="Enter middle name">
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+        <label>Last Name</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="lname" placeholder="Enter last name">
+      </mat-form-field>
+    </div>
+ </div>
+<div class="form-row">
+    <div class="form-field">
+      <label>Email</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="email" placeholder="Enter Email">
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+     <mat-label>Gender</mat-label>
+     <mat-radio-group formControlName="gender" class="gender-group">
+        <mat-radio-button value="male">Male</mat-radio-button>
+        <mat-radio-button value="female">Female</mat-radio-button>
+        <mat-radio-button value="other">Other</mat-radio-button>
+    </mat-radio-group>
+
+    </div>
+    <div class="form-field">
+        <label>Date of Birth</label>
+      <mat-form-field appearance="outline" class="full-width">
+         <input matInput [matDatepicker]="picker"  formControlName="dob">
+         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+         <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+ </div>   
+ <div class="form-row">
+    <div class="form-field">
+      <label>Father/Spouse/Mother Name</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="guardianname" placeholder="">
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+     <label>Father/spouse/mother Number</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="guardiannum" placeholder="Enter Phone Number">
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+        <label>Relationship</label>
+        <mat-form-field appearance="outline" class="full-width">
+            <input matInput formControlName="relationship" placeholder="Enter Phone Number">
+        </mat-form-field>
+    </div>
+ </div> 
+  <div class="form-row">
+    <div class="form-field">
+       <label>Mobile Number</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="mobile" placeholder="Enter Phone Number">
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+      <div class="form-field">
+        <label>Date of Joining</label>
+        <mat-form-field appearance="outline" class="full-width">
+            <input matInput [matDatepicker]="picker1"  formControlName="joiningdate">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+         </mat-form-field>
+      </div>
+    </div>
+    <div class="form-field">
+        <label>Basic Salary</label>
+        <mat-form-field appearance="outline" class="full-width">
+            <input matInput formControlName="basicsal" placeholder="Enter Phone Number">
+        </mat-form-field>
+    </div>
+ </div>   
+<div class="form-row">
+        <div class="form-field">
+             <mat-checkbox formControlName="pf" (change)="toggleTextbox()">PF</mat-checkbox>
+             <mat-form-field *ngIf="pfBox" appearance="outline" class="textbox-inline">
+                 <input matInput formControlName="pfno" placeholder="Please specify pf num">
+            </mat-form-field>
+        </div>
+
+    <div class="form-field">
+        <mat-checkbox formControlName="esi" (change)="toggleTextboxForesi()">Esi</mat-checkbox>
+        <mat-form-field *ngIf="esiBox" appearance="outline" class="textbox-inline">
+            <input matInput formControlName="esino" placeholder="Please specify pf num">
+        </mat-form-field>
+    </div>
+       <div class="form-field" >
+        <mat-label>Select Branch</mat-label>
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-select formControlName="branchId" appearance="outline" style="width: 100%;">
+            <mat-option *ngFor="let branch of branchList" [value]="branch.id">{{ branch.branchName }}</mat-option>
+        </mat-select>
+        </mat-form-field>
+    </div>
+ </div>   
+<div class="form-row">
+ <div class="form-field" >
+        <mat-label>Select Department</mat-label>
+           <mat-form-field appearance="outline" class="full-width">
+        <mat-select formControlName="departmentId" appearance="outline" (selectionChange)="onDepartmentChange($event.value)">
+            <mat-option *ngFor="let dept of deptList" [value]="dept.id">{{ dept.departmentName }}</mat-option>
+        </mat-select>
+           </mat-form-field>
+    </div>
+    <div class="form-field" >
+        <mat-label>Select Designation</mat-label>
+           <mat-form-field appearance="outline" class="full-width">
+        <mat-select formControlName="designationId">
+            <mat-option *ngFor="let desi of designationList" [value]="desi.designationId">{{ desi.designationName }}</mat-option>
+        </mat-select>
+        </mat-form-field>
+    </div>
+ </div>    
+     <div formGroupName="Address">
+    <h3>Present Address</h3>
+    <div formGroupName="permanent">
+      <div class="form-row">
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Street</mat-label>
+            <input matInput formControlName="street" placeholder="Enter street">
+          </mat-form-field>
+        </div>
+        <div class="form-field">
+             <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Country</mat-label>
+        <mat-select formControlName="selCountry" (selectionChange)="onCountryChange('present',$event)">
+             <mat-option *ngFor="let c of countries" [value]="c.isoCode + '~' + c.name">{{ c.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+        </div>
+      </div>
+     <div class="form-row">
+      <div class="form-field">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>State</mat-label>
+        <mat-select formControlName="state">
+          <mat-option *ngFor="let state of perStates" [value]="state.name">
+            {{ state.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+      <div class="form-field">
+         <mat-form-field appearance="outline" class="full-width">
+        <mat-label>City</mat-label>
+        <input matInput formControlName="city" placeholder="Enter city">
+      </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Pin Code</mat-label>
+          <input matInput formControlName="pinCode" placeholder="Enter Pin Code">
+        </mat-form-field>
+      </div>
+     </div>
+    </div>
+    <h3>permanent Address</h3>     <mat-checkbox   [checked]="sameAsPresentChecked">
+    Permanent address is same as Present address
+  </mat-checkbox>
+    <div formGroupName="present">
+      <div class="form-row">
+        <div class="form-field">
+              <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Street</mat-label>
+        <input matInput formControlName="street" placeholder="Enter street">
+      </mat-form-field>
+        </div>
+        <div class="form-field">
+              <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Country</mat-label>
+        <mat-select formControlName="selCountry" (selectionChange)="onCountryChange('permanent',$event)">
+            <mat-option *ngFor="let c of countries" [value]="c.isoCode + '~' + c.name">{{ c.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+               <mat-form-field appearance="outline" class="full-width">
+        <mat-label>State</mat-label>
+        <mat-select formControlName="state">
+          <mat-option *ngFor="let state of preStates" [value]="state.name">
+            {{ state.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+        </div>
+        <div class="form-field">
+            <mat-form-field appearance="outline" class="full-width">
+        <mat-label>City</mat-label>
+        <input matInput formControlName="city" placeholder="Enter city">
+      </mat-form-field>
+        </div>
+        <div class="form-field">
+            
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Pin Code</mat-label>
+        <input matInput formControlName="pinCode" placeholder="Enter Pin Code">
+      </mat-form-field>
+        </div>
+      </div>  
+    </div>
+  </div>    
+  <button mat-raised-button color="primary" type="submit"  style="width: 100%"> Submit</button>
+  <!--[disabled]="branchForm.invalid"-->
+</form>
+<div class="table-card" *ngIf="view">
+    <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-mr-2"  (click)="AddOfficial()">Add Branch</button>
+     <div class="table-container">
+<p-table dataKey="id"   scrollable="true" scrollHeight="400px"   [value]="officials"  >
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 3em">Documents</th>
+       <th style="width: 3em">Address</th>
+    </tr>
+   </ng-template>    
+ </p-table>
+</div>    
