@@ -1,0 +1,15 @@
+
+
+.address-block {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+
+::ng-deep .black-toggler.p-button-text .p-button-icon {
+    color: white !important;
+    font-size: 1.2rem;
+}

@@ -1,0 +1,185 @@
+<div *ngIf="successMessage" class="message success">
+  {{ successMessage }}
+</div>
+
+<div *ngIf="errorMessage" class="message error">
+  {{ errorMessage }}
+</div>
+<form  class="form-container" [formGroup]="vendorForm" (ngSubmit)="onSubmit()" *ngIf="!view">
+    <div class="form-row">
+        <div class="form-field">
+            <mat-label>Company Name :</mat-label>
+            <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="companyName" placeholder="Enter company name">
+            </mat-form-field>
+        </div>
+        <div class="form-field">
+             <mat-label>Company WebSite :</mat-label>
+            <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="website" placeholder="Enter Company WebSite">
+            </mat-form-field>
+        </div>
+         <div class="form-field">
+            <mat-label>Contact Name </mat-label>
+            <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="contactName" placeholder="Enter contact name">
+            </mat-form-field>
+        </div>
+    </div>    
+    <div class="form-row"> 
+         <div class="form-field">
+            <mat-label>Contact Email </mat-label>
+            <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="contactEmail" placeholder="Enter contact Email">
+            </mat-form-field>
+        </div>
+         <div class="form-field">
+            <mat-label>Contact No </mat-label>
+            <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="mobileNo" placeholder="Enter contact Number">
+            </mat-form-field>
+        </div>
+        <div class="form-field">
+            <mat-label>GST No </mat-label>
+            <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="gstNo" placeholder="Enter Comapny GST Number">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-field">
+            <mat-label>Account Number </mat-label>
+            <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="accountNo" placeholder="Enter Comapny Account Number">
+            </mat-form-field>
+        </div>
+         <div class="form-field">
+            <mat-label>IFSC Code</mat-label>
+            <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="ifscCode" placeholder="Enter IFSC Code">
+            </mat-form-field>
+        </div>
+    </div>
+    <div formArrayName="addresses">
+        <div *ngFor="let address of addresses.controls; let i = index" [formGroupName]="i" class="address-block">
+            <h4>Address {{ i + 1 }}</h4>  
+            <div class="form-row">
+                <div class="form-field">
+                    <mat-label>Street</mat-label>
+                    <mat-form-field appearance="outline" class="full-width">
+                        <input matInput formControlName="street" />
+                    </mat-form-field>
+                </div>
+                 <div class="form-field">
+                     <mat-label>Country</mat-label>
+                     <mat-form-field appearance="outline" class="full-width">
+                        <mat-select formControlName="selCountry" (selectionChange)="onCountryChange(i)">
+                            <mat-option *ngFor="let c of countries" [value]="c.isoCode + '~' + c.name">{{ c.name }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>   
+            <div class="form-row">
+                     <div class="form-field">
+                    <mat-label>State</mat-label>
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-select formControlName="state" >
+                            <mat-option *ngFor="let s of states" [value]="s.name">{{ s.name }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="form-field">
+                     <mat-label>City</mat-label>
+                     <mat-form-field appearance="outline" class="full-width">
+                        
+                            <input matInput formControlName="city" />
+                    </mat-form-field>
+                </div>
+                <div class="form-field">
+                    <mat-label>Pincode</mat-label>
+                     <mat-form-field appearance="outline" class="full-width">
+                         
+                            <input matInput formControlName="pincode" />
+                    </mat-form-field>
+                </div>
+                <div class="form-field">
+                     <button mat-raised-button color="warn" type="button" (click)="removeAddress(i)">Remove Address</button>
+                </div>
+                
+            </div>     
+        </div>
+    </div>   
+    <button mat-raised-button color="warn" type="button" (click)="addAddress()">Add Address</button><hr/>
+    <button mat-raised-button color="warn" type="submit">Submit</button>
+</form>            
+
+<div class="table-card" *ngIf="view">
+    <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-mr-2"  (click)="addVendor()">Add Vendor</button>
+    <div class="table-container">
+    <p-table [value]="vendors" dataKey="id" scrollable="true" scrollHeight="400px" [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand($event)" 
+            (onRowCollapse)="onRowCollapse($event)" >
+      
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 5rem">Addresses</th>
+                <th>Comapny Name</th>
+                <th>Website</th>
+                <th>Contact Person</th>
+                <th>Contact Email</th>
+                <th>contact number</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-vendor let-expanded="expanded">
+            <tr>
+                <td>
+                    <p-button type="button"  styleClass="black-toggler" pRipple [pRowToggler]="vendor" 
+                     [rounded]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"  />
+                </td>
+                <td>{{ vendor.companyName }}</td>
+                <td>{{vendor.website}}</td>
+                <td>{{vendor.contactName}}</td>
+                <td>{{vendor.contactEmail}}</td>
+                <td>{{vendor.mobileNo}}</td>
+            </tr>
+        </ng-template>
+        <ng-template #expandedrow let-vendor>
+            <tr>
+                <td colspan="7">
+                    <div class="p-4">
+                        <h5>Address for {{ vendor.companyName }}</h5>
+                        <p-table [value]="vendor.Addresses" dataKey="id" [loading]="addressLoading[vendor.id]">
+                            <ng-template #header>
+                                <tr>
+                                    <th>Street</th>
+                                    
+                                    <th pSortableColumn="id">
+                                        <div class="flex items-center gap-2">
+                                            Country
+                                            <p-sortIcon field="country" />
+                                        </div>
+                                    </th>
+                                 <th>State</th>
+                                    <th style="width: 4rem"></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-address>
+                                <tr>
+                                   <td>{{address.street}}</td>
+                                    <td>{{ address.country }}</td>
+                                    <td>{{address.state}}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template #emptymessage>
+                                <tr>
+                                    <td colspan="6">There are no address</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>  
+    </p-table>
+    </div>
+      <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]" />
+</div>

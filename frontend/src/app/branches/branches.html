@@ -1,0 +1,7 @@
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+      <div *ngFor="let item of urls; let i = index"  style="margin-right: 10px;" (click)="this.imageClick(item.url,item.name)" >
+        <img [src]="item.url" height="100px" width="100px" >
+         <p class="feed-text">{{item.name}}</p>
+      </div>
+    </div>
+  

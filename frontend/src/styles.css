@@ -1,0 +1,124 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Ensure body and html take full height */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow:hidden;
+}
+
+/* Wrapper for sidebar + main content */
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+
+
+/* Main content */
+.layout-content {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ✅ ensures children start at the top */
+}
+
+/* Ensure table starts at top of content */
+.table-container {
+
+  display: block;
+  margin-top: 0;
+  margin:0;
+   height: 400px;   /* match scrollHeight */
+  overflow: auto;  /* scrollable table body */
+}
+.message {
+  padding: 12px 16px;
+  margin: 10px 0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.message.success {
+  background-color: #e6f7ed;
+  border: 1px solid #27ae60;
+  color: #2e7d32;
+}
+
+.message.error {
+  background-color: #fdecea;
+  border: 1px solid #e74c3c;
+  color: #c0392b;
+}
+
+.message.info {
+  background-color: #eaf4fd;
+  border: 1px solid #3498db;
+  color: #2471a3;
+}
+
+.message.warning {
+  background-color: #fff8e1;
+  border: 1px solid #f39c12;
+  color: #b9770e;
+}
+  * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px; /* space between fields */
+}
+
+.form-field {
+  flex: 1; /* all fields take equal width */
+}
+
+.full-width {
+  width: 100%;
+}
+/*for grid*/
+/* Full height content */
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+}
+
+/* Table wrapper */
+.table-wrapper {
+  flex: 1 1 auto;       /* Fill available space */
+  min-height: 300px;    /* Prevent collapse */
+}
+
+/* Ensure table displays during loading */
+.p-datatable.p-datatable-loading {
+  display: block !important;
+}
+
+
+.table-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 450px; /* enough for table + paginator */
+}
+
+
+
+.card {
+  padding: 1rem;
+}
+
+
+

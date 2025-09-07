@@ -1,0 +1,63 @@
+/* Sidebar Container */
+.sidebar {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 260px;
+  /*background-color: #6f004a;*/
+  color: white;
+  height: 100vh;
+  overflow-y: auto;
+   background-color: var(--mat-toolbar-container-background-color) !important;
+}
+mat-nav-list.sidebar {
+  padding: 0 !important;
+}
+/* Remove truncation */
+mat-list-item {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+.mat-list-item .mat-line {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+.sidebar .mat-list-item {
+  font-size: 14px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  color: white;
+/*  background-color: #6f0044;  match sidebar color */
+}
+/*.sidebar .mat-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+ Submenu styling */
+.submenu {
+  padding-left: 20px;
+  /* background-color: #42009b;  slightly lighter purple */
+}
+
+.submenu .mat-list-item {
+  font-size: 13px;
+}
+
+/* Sub-submenu styling */
+.subsubmenu {
+  padding-left: 35px;
+  /*background-color: #5e00cc;*/
+}
+
+.subsubmenu .mat-list-item {
+  font-size: 12px;
+}
+
+/* Icons alignment */
+.menu-icon {
+  margin-right: 8px;
+  display: inline-flex;
+  align-items: center;
+}

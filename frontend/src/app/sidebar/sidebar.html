@@ -1,0 +1,24 @@
+<!-- sidebar.component.html -->
+
+<mat-nav-list class="sidebar mat-primary">
+  <ng-container *ngFor="let item of menu">
+    <ng-template [ngTemplateOutlet]="renderMenu" [ngTemplateOutletContext]="{ item: item }"></ng-template>
+  </ng-container>
+</mat-nav-list>
+
+<ng-template #renderMenu let-item="item">
+  <mat-list-item (click)="item.children ? toggleMenu(item) : null" [routerLink]="item.routerLink || null" [queryParams]="item.queryParam || null">
+    <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon>
+    <span>{{ item.title }}</span>
+    <span class="spacer"></span>
+    <mat-icon *ngIf="item.children">
+      {{ item.open ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}
+    </mat-icon>
+  </mat-list-item>
+
+  <div *ngIf="item.children && item.open" class="submenu">
+    <ng-container *ngFor="let child of item.children">
+      <ng-template [ngTemplateOutlet]="renderMenu" [ngTemplateOutletContext]="{ item: child }"></ng-template>
+    </ng-container>
+  </div>
+</ng-template>

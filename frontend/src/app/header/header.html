@@ -1,0 +1,14 @@
+<mat-toolbar color="primary">
+  <img src="favicon.ico" alt="Logo" class="logo">
+
+  <span class="spacer"></span>
+
+  <button mat-button [matMenuTriggerFor]="menu" class="login-btn">
+    <span>Login</span>
+    <mat-icon class="arrow" [class.rotate]="menuOpen">keyboard_arrow_down</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu" (menuOpened)="menuOpen = true" (menuClosed)="menuOpen = false">
+    <button mat-menu-item>Logout</button>
+  </mat-menu>
+</mat-toolbar>
