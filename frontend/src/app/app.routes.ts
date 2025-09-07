@@ -10,8 +10,12 @@ import { Models } from './models/models';
 import { Modules } from './modules/modules';
 import { Roles } from './roles/roles';
 import { Workflow } from './workflow/workflow';
+import { Department } from './department/department';
+import { Designation } from './designation/designation';
+import { Branch } from './branch/branch';
+import { Officials } from './officials/officials';
 export const routes: Routes = [
-    { path: '', component: Userlogin,pathMatch:'full' }, // Default route
+    { path: '', component: Userlogin,pathMatch:'full' }, 
     { path: 'login', component: Userlogin},
     {path:'branches',component:Branches},
     {path:'',component:Landing,
@@ -24,7 +28,11 @@ export const routes: Routes = [
         {path:'modelsm',component:Models},
         {path:'modulem',component:Modules},
         {path:'rolem',component:Roles},
-        {path:'workflowm',component:Workflow}
+        {path:'workflowm',component:Workflow},
+        {path:'departmentm',component:Department},
+        {path:'designationm',component:Designation},
+        {path:'branchm',component:Branch},
+        {path:'officialsm',component:Officials}
     ]},
 
 ];

@@ -3,6 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatRippleModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,7 +21,7 @@ import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-bank-account',
-  imports: [MatButtonModule, MatCardModule, MatProgressSpinnerModule,MatIcon, MatRippleModule, MatInputModule, ButtonModule, CommonModule, ReactiveFormsModule, MatFormFieldModule, PaginatorModule, TableModule, MatIcon],
+  imports: [MatButtonModule, MatCardModule,MatRadioModule, MatProgressSpinnerModule,MatIcon, MatRippleModule, MatInputModule, ButtonModule, CommonModule, ReactiveFormsModule, MatFormFieldModule, PaginatorModule, TableModule, MatIcon],
   templateUrl: './bank-account.html',
   styleUrl: './bank-account.css'
 })
@@ -69,15 +70,7 @@ addAccount(){
   this.accountForm.reset(); 
 
 }
-convertFileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    console.log(file.name);
-    const reader = new FileReader();
-    reader.readAsDataURL(file);  // encodes file as base64
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = error => reject(error);
-  });
-}
+
 successMessage: string = '';
 errorMessage:string='';
 success: boolean = false;

@@ -108,13 +108,10 @@ const account = await BankAccount.findByPk(parseInt(accountData.id), { transacti
     if (!account) {
 
       await t.rollback();
-      return res.status(404).json({ message: 'Account not found' });
+      return res.status(404).json({ message: 'Branch not found' });
     }
   await account.update(accountData, { transaction: t });
  const id = account.getDataValue('id');
-console.log("account id =", id);
-
-    console.log("started with file data");
     // 2️⃣ Prepare Files
      const files = req.files as Express.Multer.File[];
 if (files && files.length > 0) {

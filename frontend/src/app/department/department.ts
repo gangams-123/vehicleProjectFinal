@@ -1,0 +1,108 @@
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+//for grid
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
+import { DepartmentService } from './department-service';
+
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+interface department {
+  departmentName: string;
+  isEditing?: boolean;
+  isNew?: boolean;
+  id:string;
+}
+@Component({
+  selector: 'app-department',
+   imports: [CommonModule,PaginatorModule,TableModule,ButtonModule,MatInputModule,FormsModule,MatFormFieldModule],
+  templateUrl: './department.html',
+  styleUrl: './department.css'
+})
+export class Department {
+  loading=false;
+  departments: department[] = []; 
+  totalRecords: number = 0;
+  first: number = 0;
+  rows: number = 10;
+ successMessage='';
+ errorMessage='';
+   constructor(private departmentService:DepartmentService,private cdr: ChangeDetectorRef){}
+ ngOnInit() {
+    this.loadDepartments(this.first,this.rows);    
+  } 
+loadDepartments(first: number, rows: number) {
+  this.loading = true;
+  this.departmentService.getDepartments(first, rows).subscribe({
+    next: (data) => {
+      // Defer update to avoid NG0100
+      Promise.resolve().then(() => {
+        this.departments = data.items.map((item: any) => ({ ...item, isEditing: false }));
+        this.totalRecords = data.total;
+        this.loading = false;
+        this.cdr.detectChanges(); // extra safety
+      });
+    },
+    error: (err) => {
+      console.error('Error loading departments:', err);
+      this.loading = false;
+      this.errorMessage=err.message;
+    }
+  });
+}
+  onPageChange(event: any) { 
+    this.first = event.first;
+   this.loading=false;
+    this.rows = event.rows;
+    this.loadDepartments(this.first, this.rows);
+   
+  } 
+  addRow() {
+    this.departments =  [{ departmentName: '', isNew: true, isEditing: true,id:'' }, ...this.departments];
+  }
+  editRow(row: department) {
+    row.isEditing = true;
+  }
+  deleteRow(id: number,index:number) {
+
+    this.departmentService.deleteDepartment(id).subscribe({
+      next:reponse=>{
+          this.successMessage=reponse.message;
+           this.departments.splice(index, 1);
+           this.departments = [...this.departments];
+          
+           this.cdr.detectChanges();
+      },
+      error: (err) =>{ console.error('Error deleting departments:', err);this.errorMessage=err.message;  }
+    });
+   
+  }
+saveRow(row: department, index: number) {
+  const serviceCall = row.isNew
+    ? this.departmentService.createDepartment(row)
+    : this.departmentService.updateDepartment(row);
+  serviceCall.subscribe({
+    next: (response) => {
+      row.isNew = false;
+      row.isEditing = false;
+      row.id = response.data.id;
+        this.successMessage=response.message;
+      // Defer table reload to avoid NG0100
+      Promise.resolve().then(() => {
+        this.loadDepartments(this.first / this.rows, this.rows);
+      });
+    },
+    error: (err) =>{ console.error('Error saving department:', err);this.errorMessage=err.message;}
+  });
+}
+
+
+ cancelEdit(row:department, index: number) {
+    if (row.isNew) 
+      this.departments.splice(index, 1); // remove new row
+    else 
+      row.isEditing = false; // revert to view mode
+  }
+}

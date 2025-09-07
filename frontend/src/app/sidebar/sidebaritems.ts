@@ -30,12 +30,9 @@ export const list=[
            {
                title:'Designation Master',
               routerLink:'/designationm',
-           }, {
-               title:'Category Master',
-              routerLink:'/categorym',
-           }, {
-               title:'Billing Cycle Master',
-              routerLink:'/billingCyclem',
+           },  {
+               title:'Branch Master',
+              routerLink:'/branchm',
            }]
        } ,{
           number:'1.2',

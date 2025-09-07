@@ -10,7 +10,7 @@
     <div class="form-row">
         <div class="form-field">
             <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Module</mat-label> <!-- 🔥 correct position -->
+            <mat-label>Module</mat-label> <!--  correct position -->
             <mat-select formControlName="module" (selectionChange)="checkWorkFlowExists($event)">
                 <mat-option *ngFor="let m of modules" [value]="m">{{m}}</mat-option>
             </mat-select>
@@ -42,7 +42,7 @@
                 <div class="form-field">
                     <mat-label>Role</mat-label>
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-select formControlName="roleId" >
+                        <mat-select formControlName="roleIds" [multiple]="true">
                             <mat-option *ngFor="let r of roles" [value]="r.id">{{ r.roleName }}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -104,18 +104,18 @@
                 <td colspan="7">
                     <div class="p-4">
                         <h5>WorkFlows </h5>
-                        <p-table [value]="workFlow.WorkFlowChildren" dataKey="id" >
+                        <p-table [value]="workFlow.WorkFlowChildrenByStatus" dataKey="id" >
                             <ng-template #header>
                                 <tr>
                                     <th>Status</th>
                                     <th>Role</th>
                             </ng-template>
-                            <ng-template #body let-w>
-                                <tr>
-                                    <td>{{w.status }}</td>
-                                    <td>{{w.Role.roleName}}</td>
-                                </tr>
-                            </ng-template>
+                           <ng-template pTemplate="body" let-child>
+                             <tr>
+                                <td>{{ child.status }}</td>
+                                <td>{{ child.roles ? child.roles.join(', ') : '' }}</td>
+                            </tr>
+                </ng-template>
                             <ng-template #emptymessage>
                                 <tr>
                                     <td colspan="6">There are no Flows</td>

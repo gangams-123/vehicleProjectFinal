@@ -86,7 +86,12 @@ loadModels(first: number, rows: number) {
 
   editRow(row: model) {
     row.isEditing = true;
- 
+     this.makeService.getAllMakes().subscribe({
+      next:res=>{this.makes=res.items;
+        this.cdr.detectChanges
+      },
+      error: (err) =>{ console.error('Error deleting models:', err);this.errorMessage=err.message;  }
+  });
   }
   deleteRow(id: number,index:number) {
 
@@ -118,7 +123,7 @@ saveRow(row: model, index: number) {
         this.loadModels(this.first / this.rows, this.rows);
       });
     },
-    error: (err) =>{ console.error('Error saving make:', err);this.errorMessage=err.message;}
+    error: (err) =>{ console.error('Error saving model:', err);this.errorMessage=err.message;}
   });
 }
 

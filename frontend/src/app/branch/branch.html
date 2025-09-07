@@ -1,0 +1,226 @@
+<form [formGroup]="branchForm" class="form-container" (ngSubmit)="onSubmit()" *ngIf="!view">
+
+  <div class="form-row">
+    <div class="form-field">
+      <label>Branch Name</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="branchName" placeholder="Enter branch name">
+      </mat-form-field>
+    </div>
+
+    <div class="form-field">
+      <label>Email Id</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="emailId" placeholder="Enter Email">
+      </mat-form-field>
+    </div>
+     <div class="form-field">
+      <label>URL</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="url" placeholder="Enter URL">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="form-row">
+   
+    <div class="form-field">
+      <label>Phone Number</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="phoneNum" placeholder="Enter Phone Number">
+      </mat-form-field>
+    </div>
+       <div class="form-field">
+      <label>Mobile Number</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="mobileNum" placeholder="Enter Mobile Number">
+      </mat-form-field>
+    </div>
+  </div>
+   <div class="form-row">
+    <div class="form-field">
+         <label>Office Type</label>
+         <mat-radio-group formControlName="officeType" class="radio-group">
+         <mat-radio-button [value]="officeTypes[0]">{{officeTypes[0]}}</mat-radio-button>
+        <mat-radio-button [value]="officeTypes[1]">{{officeTypes[1]}}</mat-radio-button>
+        </mat-radio-group>
+    </div>
+      <div class="form-field">
+            <label>Established Date</label>
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <input matInput [matDatepicker]="picker">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+  </div>  
+  <div formGroupName="Address">
+    <div class="form-row">
+        <div class="form-field">
+              <label>Address</label>
+            <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="street" placeholder="Enter Address">
+            </mat-form-field>
+        </div>
+          <div class="form-field">
+         <label>Select Country</label>
+         <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-select formControlName="selCountry" (selectionChange)="onCountryChange()">
+                <mat-option *ngFor="let c of countries" [value]="c.isoCode + '~' + c.name">{{ c.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    </div>
+    <div class="form-row">
+        <div class="form-field">
+        <label>Select State</label>
+        <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-select formControlName="state">
+                <mat-option *ngFor="let state of states " [value]="state.name">{{ state.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>    
+    </div> 
+      <div class="form-field">
+         <label>City Name </label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="city" placeholder="Enter city name">
+      </mat-form-field>
+     </div>
+      <div class="form-field">
+         <label>Zip Code </label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="pinCode" placeholder="Enter zip code">
+      </mat-form-field>
+     </div>
+    </div>
+
+  </div> 
+  <div class="form-row">
+  <div class="form-field">
+    <label>Upload Files</label>
+    <mat-card class="upload-card">
+      <input type="file" hidden #fileInput (change)="onFilesSelected($event)" multiple>
+      <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">Choose Files</button>
+      <div *ngIf="selectedFiles.length > 0" class="file-list">
+        <div *ngFor="let file of selectedFiles"> {{ file.name }} </div>
+      </div>
+     </mat-card>
+     </div>
+   </div>    
+<div class="form-row submit-row">
+<button mat-raised-button color="warn" type="submit" [disabled]="saving" style="display:flex; align-items:center; gap:0.5rem;">
+  <mat-progress-spinner *ngIf="saving" diameter="20" mode="indeterminate" [strokeWidth]="3"></mat-progress-spinner>
+  <span>{{ saving ? 'Saving...' : 'Submit' }}</span>
+</button>
+
+</div>
+</form>
+<div class="table-card" *ngIf="view">
+    <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-mr-2"  (click)="AddBranch()">Add Branch</button>
+    <div class="table-container">
+<p-table 
+  [value]="branches" 
+  dataKey="id" 
+  scrollable="true" 
+  scrollHeight="400px" 
+ >
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 3em">Documents</th>
+       <th style="width: 3em">Address</th>
+       <!-- Row toggler column -->
+      <th>Branch Name</th>
+      <th>URL</th>
+      <th>Email Id</th>
+      <th>Mobile Number</th>
+      <th>Phone Number</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-branch let-expanded="expanded" let-i="rowIndex">
+    <tr>
+      <!-- Row toggler -->
+      <td>
+        <p-button 
+          type="button" styleClass="black-toggler" pRipple [icon]="isFileExpanded(branch.id) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+          (click)="toggleFileRow(branch.id)"[pRowToggler]="branch" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+          [rounded]="true"></p-button>
+      
+      </td>
+      <td>
+            <p-button 
+          type="button" styleClass="black-toggler" pRipple [icon]="isAddressExpanded(branch.id) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+          (click)="toggleAddressRow(branch.id)"[pRowToggler]="branch" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+          [rounded]="true"></p-button>
+      </td>
+      <td>{{ branch.branchName }}</td>
+      <td>{{ branch.url }}</td>
+      <td>{{ branch.emailId }}</td>
+      <td>{{ branch.mobileNum }}</td>
+      <td>{{ branch.phoneNum }}</td>
+
+      <!-- Action buttons -->
+      <td>
+        <button pButton label="Edit" class="p-button-info p-mr-2" (click)="editBranch(branch)"></button>
+        <button pButton label="Delete" class="p-button-danger" (click)="deleteBranch(branch.id,i)"></button>
+      </td>
+    </tr>
+        </ng-template>
+        <ng-template #expandedrow let-branch>
+            <tr *ngIf="isAddressExpanded(branch.id)">
+                <td colspan="7">
+                    <div class="p-4">
+                        <h5>Dcouments </h5>
+                        <p-table [value]="branch.Files" dataKey="id" >
+                            <ng-template #header>
+                                <tr>
+                                    <th>File Name</th>
+                            </ng-template>
+                            <ng-template #body let-file>
+                                <tr>
+                                    <td><a href="#" (click)="openFile(file.id, $event)">{{ file.fileName }}</a></td>
+                                </tr>
+                            </ng-template>
+                            <ng-template #emptymessage>
+                                <tr>
+                                    <td colspan="6">There are no documents</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>  
+          <ng-template #expandedrow let-branch>
+            <tr *ngIf="isAddressExpanded(branch.id)">
+                <td colspan="7">
+                    <div class="p-4">
+                        <h5>Address </h5>
+                        <p-table [value]="branch.Files" dataKey="id" >
+                            <ng-template #header>
+                                <tr>
+                                    <th>Street</th>
+                            </ng-template>
+                            <ng-template #body let-address>
+                                <tr>
+                                    <td>{{address.street}}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template #emptymessage>
+                                <tr>
+                                    <td colspan="6">There are no address</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>  
+
+    </p-table>  
+  </div>
+  <!-- Paginator -->
+  <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]" />
+</div>
+
+

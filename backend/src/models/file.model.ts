@@ -3,7 +3,7 @@ import sequelize from "../config/db.js";
 
 interface FileAttributes {
   id: number;
-  entityType: "vendor" | "customer" | "official" | "bankaccount";
+  entityType: "vendor" | "customer" | "official" | "bankaccount"|"branch";
   entityId: number;
   fileName: string;
   size: number;
@@ -17,7 +17,7 @@ class File extends Model<FileAttributes, FileOptionalAttributes>
   implements FileAttributes
 {
   declare id: number;
-  declare entityType: "vendor" | "customer" | "official" | "bankaccount";
+  declare entityType: "vendor" | "customer" | "official" | "bankaccount"|"branch";
   declare entityId: number;
   declare fileName: string;
   declare size: number;

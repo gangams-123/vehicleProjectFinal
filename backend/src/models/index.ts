@@ -9,10 +9,10 @@ import Make from "./make.model.js";
 import WorkFlowChild from "./workFlowChild.model.js";
 import WorkFlowMain from "./workFlowMain.model.js";
 import Roles from "./roles.model.js";
-
-// -------------------- Associations --------------------
-
-// Vendor ↔ Address
+import Department from "./department.model.js";
+import Designation from "./designation.model.js";
+import BranchMaster from "./branchMaster.model.js";
+import Official from "./official.model.js";
 Vendor.hasMany(Address, {
   foreignKey: "entityId",
   constraints: false,
@@ -49,9 +49,32 @@ WorkFlowChild.belongsTo(WorkFlowMain, {
 WorkFlowChild.belongsTo(Roles, {
   foreignKey: 'roleId',
 });
+BranchMaster.hasMany(Address, {
+  foreignKey: "entityId",
+  constraints: false,
+  scope: { entityType: "branchmaster" },
+});
+
+BranchMaster.hasMany(File, {
+  foreignKey: "entityId",
+  constraints: false,
+  scope: { entityType: "branchmaster" },
+    onDelete: 'CASCADE'
+});
+
+Official.hasMany(File, {
+  foreignKey: "entityId",
+  constraints: false,
+  scope: { entityType: "official" },
+    onDelete: 'CASCADE'
+});
+Official.hasMany(Address, {
+  foreignKey: "entityId",
+  constraints: false,
+  scope: { entityType: "official" },
+});
 // Associations
-Make.hasMany(Models, { foreignKey: "makeId" });
 Models.belongsTo(Make, { foreignKey: "makeId" });
+Designation.belongsTo(Department,{foreignKey:"departmentId"});
 
-
-export { sequelize, Vendor, Address, BankAccount, File ,Make,Models,WorkFlowChild,WorkFlowMain};
+export {sequelize,Vendor, Address, BankAccount, File ,Make,Models,WorkFlowChild,WorkFlowMain,Designation,Department,Official};

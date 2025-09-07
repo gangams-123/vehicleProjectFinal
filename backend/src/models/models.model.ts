@@ -13,9 +13,11 @@ interface ModelOptionalAttributes extends Optional<ModelAttributes, "id"> {}
 
 class Models extends Model<ModelAttributes, ModelOptionalAttributes>
   implements ModelAttributes {
-  public id!: number;
-  public modelName!: string;
-  public makeId!: number;
+  declare id: number;
+  declare modelName: string;
+  declare makeId: number;
+    declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Models.init(

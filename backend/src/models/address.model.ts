@@ -3,10 +3,12 @@ import sequelize from "../config/db.js";
 
 interface AddressAttributes {
   id: number;
-  entityType: "vendor" | "customer" | "official" | "bankaccount";
+  entityType: "vendor" | "customer" | "official" | "bankaccount"|"branch";
+  addressType:"permanent"|"present"|"office";
   entityId: number;
   street: string;
   city: string;
+  country:string;
   state: string;
   postalCode: string;
 }
@@ -17,13 +19,14 @@ class Address extends Model<AddressAttributes, AddressOptionalAttributes>
   implements AddressAttributes
 {
   declare id: number;
+  declare country:string;
   declare entityType: "vendor" | "customer" | "official" | "bankaccount";
   declare entityId: number;
   declare street: string;
   declare city: string;
   declare state: string;
   declare postalCode: string;
-
+declare  addressType:"permanent"|"present"|"office";
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -36,7 +39,11 @@ Address.init(
       primaryKey: true,
     },
     entityType: {
-      type: DataTypes.ENUM("vendor", "customer", "official", "bankaccount"),
+      type: DataTypes.ENUM("vendor", "customer", "official", "bankaccount","branch"),
+      allowNull: false,
+    },
+      addressType: {
+      type: DataTypes.ENUM("permanent","present","office"),
       allowNull: false,
     },
     entityId: {
@@ -59,6 +66,10 @@ Address.init(
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+     country: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    }
   },
   {
     sequelize,
