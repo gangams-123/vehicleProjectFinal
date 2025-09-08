@@ -1,40 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-/* Ensure body and html take full height */
-html, body {
-  height: 100%;
-  margin: 0;
-  overflow:hidden;
-}
 
-/* Wrapper for sidebar + main content */
-.layout-wrapper {
-  display: flex;
-  min-height: 100vh;
-}
-
-
-
-/* Main content */
-.layout-content {
-  flex: 1;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* ✅ ensures children start at the top */
-}
-
-/* Ensure table starts at top of content */
-.table-container {
-
-  display: block;
-  margin-top: 0;
-  margin:0;
-   height: 400px;   /* match scrollHeight */
-  overflow: auto;  /* scrollable table body */
-}
 .message {
   padding: 12px 16px;
   margin: 10px 0;
@@ -88,12 +55,7 @@ html, body {
 }
 /*for grid*/
 /* Full height content */
-.content-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 1rem;
-}
+
 
 /* Table wrapper */
 .table-wrapper {

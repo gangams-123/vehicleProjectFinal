@@ -4,14 +4,14 @@ import { environment } from '../environment/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OfficialService {
-    constructor(private http: HttpClient) {}
-  private baseUrl = environment.apiUrl; 
-  private url=`${this.baseUrl}/official`;
-   createOfficial(data:FormData): Observable<any> {
-    return this.http.post(this.url,data);
+  constructor(private http: HttpClient) {}
+  private baseUrl = environment.apiUrl;
+  private url = `${this.baseUrl}/official`;
+  createOfficial(data: FormData): Observable<any> {
+    return this.http.post(this.url, data);
   }
   getOfficials(page: number, size: number): Observable<any> {
     const params = new HttpParams().set('page', page).set('size', size);
@@ -19,5 +19,8 @@ export class OfficialService {
   }
   deleteOfficial(id: number): Observable<any> {
     return this.http.delete(`${this.url}/${id}`);
+  }
+  checkLogin(data: any): Observable<any> {
+    return this.http.post(`${this.url}/login`, data);
   }
 }

@@ -1,3 +1,4 @@
+// models/index.js
 import sequelize from "../config/db.js";
 
 import Vendor from "./vendor.model.js";
@@ -13,6 +14,10 @@ import Department from "./department.model.js";
 import Designation from "./designation.model.js";
 import BranchMaster from "./branchMaster.model.js";
 import Official from "./official.model.js";
+
+// ----------------------------
+// Vendor ↔ Address
+// ----------------------------
 Vendor.hasMany(Address, {
   foreignKey: "entityId",
   constraints: false,
@@ -24,12 +29,14 @@ Address.belongsTo(Vendor, {
   constraints: false,
 });
 
+// ----------------------------
 // BankAccount ↔ File
+// ----------------------------
 BankAccount.hasMany(File, {
   foreignKey: "entityId",
   constraints: false,
   scope: { entityType: "bankaccount" },
-    onDelete: 'CASCADE'
+  onDelete: "CASCADE",
 });
 
 File.belongsTo(BankAccount, {
@@ -37,6 +44,9 @@ File.belongsTo(BankAccount, {
   constraints: false,
 });
 
+// ----------------------------
+// WorkFlowMain ↔ WorkFlowChild ↔ Roles
+// ----------------------------
 WorkFlowMain.hasMany(WorkFlowChild, {
   foreignKey: "mainId",
   constraints: false,
@@ -46,9 +56,14 @@ WorkFlowChild.belongsTo(WorkFlowMain, {
   foreignKey: "mainId",
   constraints: false,
 });
+
 WorkFlowChild.belongsTo(Roles, {
-  foreignKey: 'roleId',
+  foreignKey: "roleId",
 });
+
+// ----------------------------
+// BranchMaster ↔ Address ↔ File
+// ----------------------------
 BranchMaster.hasMany(Address, {
   foreignKey: "entityId",
   constraints: false,
@@ -59,22 +74,103 @@ BranchMaster.hasMany(File, {
   foreignKey: "entityId",
   constraints: false,
   scope: { entityType: "branchmaster" },
-    onDelete: 'CASCADE'
+  onDelete: "CASCADE",
+});
+
+// ----------------------------
+// Official ↔ Address ↔ File
+// ----------------------------
+Official.hasMany(Address, {
+  foreignKey: "entityId",
+  constraints: false,
+  scope: { entityType: "official" },
 });
 
 Official.hasMany(File, {
   foreignKey: "entityId",
   constraints: false,
   scope: { entityType: "official" },
-    onDelete: 'CASCADE'
 });
-Official.hasMany(Address, {
-  foreignKey: "entityId",
-  constraints: false,
-  scope: { entityType: "official" },
-});
-// Associations
-Models.belongsTo(Make, { foreignKey: "makeId" });
-Designation.belongsTo(Department,{foreignKey:"departmentId"});
 
-export {sequelize,Vendor, Address, BankAccount, File ,Make,Models,WorkFlowChild,WorkFlowMain,Designation,Department,Official};
+// ----------------------------
+// Official ↔ Roles ↔ Department
+// ----------------------------
+Official.belongsTo(Roles, {
+  foreignKey: "roleId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+Roles.hasMany(Official, { foreignKey: "roleId" });
+
+Official.belongsTo(Department, {
+  foreignKey: "departmentId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+Department.hasMany(Official, { foreignKey: "departmentId" });
+
+// ----------------------------
+// Models ↔ Make
+// ----------------------------
+Models.belongsTo(Make, { foreignKey: "makeId" });
+
+// ----------------------------
+// Designation ↔ Department
+// ----------------------------
+Designation.belongsTo(Department, { foreignKey: "departmentId" });
+
+// ----------------------------
+// Cascade Delete Hooks
+// ----------------------------
+
+// Generic helper to delete both Address and File
+const deleteRelatedEntities = async (instance: any, entityType: any) => {
+  await Address.destroy({
+    where: {
+      entityId: instance.id,
+      entityType: entityType,
+    },
+  });
+
+  await File.destroy({
+    where: {
+      entityId: instance.id,
+      entityType: entityType,
+    },
+  });
+};
+
+// Vendor cleanup
+Vendor.beforeDestroy(async (vendor) => {
+  await deleteRelatedEntities(vendor, "vendor");
+});
+
+// Official cleanup
+Official.beforeDestroy(async (official) => {
+  await deleteRelatedEntities(official, "official");
+});
+
+// BranchMaster cleanup
+BranchMaster.beforeDestroy(async (branch) => {
+  await deleteRelatedEntities(branch, "branchmaster");
+});
+
+// ----------------------------
+// Export Everything
+// ----------------------------
+export {
+  sequelize,
+  Vendor,
+  Address,
+  BankAccount,
+  File,
+  Make,
+  Models,
+  WorkFlowChild,
+  WorkFlowMain,
+  Roles,
+  Department,
+  Designation,
+  BranchMaster,
+  Official,
+};

@@ -3,57 +3,62 @@ import sequelize from "../config/db.js";
 import Department from "./department.model.js";
 import Designation from "./designation.model.js";
 import BranchMaster from "./branchMaster.model.js";
+import Roles from "./roles.model.js";
 
 interface OfficialAttributes {
   id: number;
-  fName:string;
-  mName:string;
-  lName:number;
-  email:string;
-  gender:string;
-  dob:Date;
-  guardianName:string;
-  guardianNum:string;
-  relationship:string;
-  mobile:string;
-  joiningDate:Date;
-  basicsal:string;
-  pf:boolean;
-  esi:boolean;
-  pfno:string;
-  esino:string;
-  departmentId:number;
-  designationId:number;
-  branchId:number;
-  password:string;
+  fName: string;
+  mName: string;
+  lName: number;
+  email: string;
+  gender: string;
+  dob: Date;
+  guardianName: string;
+  guardianNum: string;
+  relationship: string;
+  mobile: string;
+  joiningDate: Date;
+  basicsal: string;
+  pf: boolean;
+  esi: boolean;
+  pfno: string;
+  esino: string;
+  departmentId: number;
+  designationId: number;
+  branchId: number;
+  password: string;
+  roleId: string;
 }
 
-interface OfficialOptionalAttributes extends Optional<OfficialAttributes, "id"> {}
+interface OfficialOptionalAttributes
+  extends Optional<OfficialAttributes, "id"> {}
 
-class Official extends Model<OfficialAttributes, OfficialOptionalAttributes>
-  implements OfficialAttributes{
+class Official
+  extends Model<OfficialAttributes, OfficialOptionalAttributes>
+  implements OfficialAttributes
+{
   declare id: number;
-  declare fName:string;
-declare  mName:string;
-  declare lName:number;
-  declare email:string;
- declare gender:string;
-  declare dob:Date;
-  declare guardianName:string;
-  declare guardianNum:string;
-  declare relationship:string;
-  declare mobile:string;
-  declare joiningDate:Date;
-  declare basicsal:string;
-  declare pf:boolean;
-  declare esi:boolean;
-  declare pfno:string;
-  declare esino:string;
-  declare departmentId:number;
-  declare  designationId:number;
-  declare branchId:number;
-  declare password:string;
-
+  declare fName: string;
+  declare mName: string;
+  declare lName: number;
+  declare email: string;
+  declare gender: string;
+  declare dob: Date;
+  declare guardianName: string;
+  declare guardianNum: string;
+  declare relationship: string;
+  declare mobile: string;
+  declare joiningDate: Date;
+  declare basicsal: string;
+  declare pf: boolean;
+  declare esi: boolean;
+  declare pfno: string;
+  declare esino: string;
+  declare departmentId: number;
+  declare designationId: number;
+  declare branchId: number;
+  declare password: string;
+  declare roleId: string;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -65,12 +70,12 @@ Official.init(
       autoIncrement: true,
       primaryKey: true,
     },
-   
+
     fName: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-    mName:  {
+    mName: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
@@ -78,81 +83,102 @@ Official.init(
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-    email:  {
+    email: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-    gender:  {
+    gender: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-    dob:  {
+    dob: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    guardianName:  {
+    guardianName: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-    guardianNum:  {
+    guardianNum: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-     relationship:  {
+    relationship: {
       type: DataTypes.STRING(20),
       allowNull: false,
-    }, mobile:  {
+    },
+    mobile: {
       type: DataTypes.STRING(20),
       allowNull: false,
-    }, joiningDate:  {
+    },
+    joiningDate: {
       type: DataTypes.DATE,
       allowNull: false,
-    }, basicsal:  {
+    },
+    basicsal: {
       type: DataTypes.DATE,
       allowNull: false,
-    }, pf:  {
+    },
+    pf: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-    }, esi:  {
+    },
+    esi: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-    }, pfno:  {
+    },
+    pfno: {
       type: DataTypes.STRING,
       allowNull: false,
-    }, esino:  {
+    },
+    esino: {
       type: DataTypes.STRING,
       allowNull: false,
-    }, password:  {
+    },
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
-    },departmentId:{
-         type: DataTypes.INTEGER.UNSIGNED,
+    },
+    departmentId: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
         model: Department, // reference to Make table
-        key: "id",   // reference Make.id (makeId)
+        key: "id", // reference Make.id (makeId)
       },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
-    },designationId:{
-         type: DataTypes.INTEGER.UNSIGNED,
+    },
+    designationId: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
         model: Designation, // reference to Make table
-        key: "id",   // reference Make.id (makeId)
+        key: "id", // reference Make.id (makeId)
       },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
-    },branchId:{
-         type: DataTypes.INTEGER.UNSIGNED,
+    },
+    branchId: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
         model: BranchMaster, // reference to Make table
-        key: "id",   // reference Make.id (makeId)
+        key: "id",
       },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
-    }
+    },
+    roleId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      references: {
+        model: Roles, // reference to Make table
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
+    },
   },
   {
     sequelize,
