@@ -10,6 +10,7 @@ import departmentRouter from "./routes/department.route.js";
 import designationRouter from "./routes/designation.route.js";
 import branchRouter from "./routes/branch.routes.js";
 import officialRouter from "./routes/offcial.route.js";
+import expenseRouter from "./routes/expense.route.js";
 import cors from "cors";
 
 const app = express();
@@ -30,4 +31,5 @@ app.use("/department", departmentRouter);
 app.use("/designations", designationRouter);
 app.use("/branch", branchRouter);
 app.use("/official", officialRouter);
+app.use("/expense", expenseRouter);
 export default app;

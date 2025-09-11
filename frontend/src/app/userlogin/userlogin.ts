@@ -50,8 +50,9 @@ export class Userlogin {
         this.loading = false;
         localStorage.setItem('token', res.token);
         console.log(res);
-        //const payload = JSON.parse(atob(res.token.split('.')[1]));
-        //  localStorage.setItem('userId', payload.userId);
+        localStorage.setItem('roleId', res.user.roleId.toString());
+        localStorage.setItem('deptId', res.user.deptId.toString());
+        localStorage.setItem('officialId', res.user.officialId);
         this.router.navigate(['/branches']);
       },
       error: (err) => {

@@ -1,22 +1,25 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/db.js";
-
+import { WorkFlowChildAttributes } from "./workFlowChild.model.js";
 interface WorkFlowMainAttributes {
   id: number;
-  noofWorkFlow:number;
-  module:string;
-  status:string;
+  noofWorkFlow: number;
+  module: string;
+  status: string;
+  WorkFlowChild?: WorkFlowChildAttributes[];
 }
 
-interface WorkFlowMainptionalAttributes extends Optional<WorkFlowMainAttributes, "id"> {}
+interface WorkFlowMainptionalAttributes
+  extends Optional<WorkFlowMainAttributes, "id"> {}
 
-class WorkFlowMain extends Model<WorkFlowMainAttributes, WorkFlowMainptionalAttributes>
+class WorkFlowMain
+  extends Model<WorkFlowMainAttributes, WorkFlowMainptionalAttributes>
   implements WorkFlowMainAttributes
 {
-    declare  id: number;
-    declare noofWorkFlow:number;
-    declare module:string;
-    declare status:string;
+  declare id: number;
+  declare noofWorkFlow: number;
+  declare module: string;
+  declare status: string;
 
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
@@ -29,20 +32,19 @@ WorkFlowMain.init(
       autoIncrement: true,
       primaryKey: true,
     },
-   
+
     noofWorkFlow: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
-    module:  {
+    module: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-    status:{
-        type: DataTypes.STRING(20),
+    status: {
+      type: DataTypes.STRING(20),
       allowNull: false,
     },
-   
   },
   {
     sequelize,

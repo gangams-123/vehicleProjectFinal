@@ -1,0 +1,108 @@
+<div *ngIf="successMessage" class="message success">
+  {{ successMessage }}
+</div>
+<div *ngIf="errorMessage" class="message error">
+  {{ errorMessage }}
+</div>
+<form [formGroup]="expenseForm" class="form-container" (ngSubmit)="onSubmit()" *ngIf="!view">
+  <div class="form-row">
+    <div class="form-field">
+      <label>Details</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="details" placeholder="Enter Details about expense" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-field">
+      <label>Total Amount</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="amount" placeholder="Enter amount" />
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+      <label>Upload necessary documents</label>
+      <mat-card class="upload-card">
+        <input type="file" hidden #fileInput (change)="onFilesSelected($event)" multiple />
+        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">
+          Choose Files
+        </button>
+        <div *ngIf="selectedFiles.length > 0" class="file-list">
+          <div *ngFor="let file of selectedFiles">{{ file.name }}</div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="form-row submit-row">
+    <button
+      mat-raised-button
+      color="warn"
+      type="submit"
+      [disabled]="saving"
+      style="display: flex; align-items: center; gap: 0.5rem"
+    >
+      <mat-progress-spinner
+        *ngIf="saving"
+        diameter="20"
+        mode="indeterminate"
+        [strokeWidth]="3"
+      ></mat-progress-spinner>
+      <span>{{ saving ? 'Saving...' : 'Submit' }}</span>
+    </button>
+  </div>
+</form>
+<!--for grid-->
+<div class="table-card" *ngIf="view && !expenseView">
+  <button
+    pButton
+    icon="pi pi-check"
+    class="p-button-success p-button-sm p-mr-2"
+    *ngIf="permissionService.can(module, status[0])"
+    (click)="createExpense()"
+  >
+    Add Expense
+  </button>
+  <p-table [value]="expenseList" dataKey="id" scrollable="true" scrollHeight="400px">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Amount</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-expense>
+      <tr>
+        <td>
+          <span class="clickable-link" (click)="openExpense(expense)">
+            {{ expense.amount }}
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<div *ngIf="expenseView">
+  <!-- Inside *ngIf="expenseView" -->
+  <div *ngIf="expenseViewData">
+    <h2>Amount: {{ expenseViewData.amount }}</h2>
+    <div><strong>Status:</strong> {{ expenseViewData.status }}</div>
+
+    <!-- Previous Remarks -->
+    <div *ngIf="expenseViewData.expenseChild?.length > 0">
+      <h3>Previous Remarks</h3>
+      <div *ngFor="let remark of expenseViewData.expenseChild">
+        <div><strong>Remarks:</strong></div>
+        <textarea [readonly]="true" rows="3">{{ remark.remarks }}</textarea>
+        <div><strong>Date:</strong> {{ remark.createdAt | date: 'short' }}</div>
+        <hr />
+      </div>
+    </div>
+
+    <!-- Current User Input -->
+    <div>
+      <label><strong>Your Remarks:</strong></label>
+      <textarea [(ngModel)]="expenseViewData.currentRemarks" rows="3"></textarea>
+
+      <button (click)="approve(expenseViewData)">Approve</button>
+      <button (click)="reject(expenseViewData)">Reject</button>
+    </div>
+  </div>
+</div>

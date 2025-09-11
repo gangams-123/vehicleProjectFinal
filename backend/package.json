@@ -27,7 +27,9 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "mysql2": "^3.14.3",
-    "sequelize": "^6.37.7"
+    "reflect-metadata": "^0.2.2",
+    "sequelize": "^6.37.7",
+    "typeorm": "^0.3.26"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

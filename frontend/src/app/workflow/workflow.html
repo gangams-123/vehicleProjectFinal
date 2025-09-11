@@ -1,4 +1,3 @@
-
 <div *ngIf="successMessage" class="message success">
   {{ successMessage }}
 </div>
@@ -6,133 +5,159 @@
 <div *ngIf="errorMessage" class="message error">
   {{ errorMessage }}
 </div>
-<form  class="form-container" [formGroup]="workflowForm" (ngSubmit)="onSubmit()" *ngIf="!view" >
-    <div class="form-row">
+<form class="form-container" [formGroup]="workflowForm" (ngSubmit)="onSubmit()" *ngIf="!view">
+  <div class="form-row">
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Module</mat-label>
+        <!--  correct position -->
+        <mat-select formControlName="module" (selectionChange)="checkWorkFlowExists($event)">
+          <mat-option *ngFor="let m of modules" [value]="m">{{ m }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>No of WorkFlow</mat-label>
+        <mat-select formControlName="noofWorkFlow" (selectionChange)="addWorkFlows($event)">
+          <mat-option *ngFor="let num of numbers" [value]="num">{{ num }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div formArrayName="workFlows">
+    <div
+      *ngFor="let workFlow of workFlows.controls; let i = index"
+      [formGroupName]="i"
+      class="address-block"
+    >
+      <h4>Workflow {{ i + 1 }}</h4>
+
+      <div class="form-row">
         <div class="form-field">
-            <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Module</mat-label> <!--  correct position -->
-            <mat-select formControlName="module" (selectionChange)="checkWorkFlowExists($event)">
-                <mat-option *ngFor="let m of modules" [value]="m">{{m}}</mat-option>
+          <mat-label>Status</mat-label>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let s of status" [value]="s">{{ s }}</mat-option>
             </mat-select>
-            </mat-form-field>
-
+          </mat-form-field>
         </div>
-         <div class="form-field">
-           
-            <mat-form-field appearance="outline" class="full-width">
-                 <mat-label>No of WorkFlow</mat-label>
-                <mat-select formControlName="noofWorkFlow" (selectionChange)="addWorkFlows($event)">
-                    <mat-option *ngFor="let num of numbers" [value]="num">{{num}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <div class="form-field">
+          <mat-label>Role</mat-label>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-select formControlName="roleIds" [multiple]="true">
+              <mat-option *ngFor="let r of roles" [value]="r.id">{{ r.roleName }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
+      </div>
     </div>
-       <div formArrayName="workFlows">
-        <div *ngFor="let workFlow of workFlows.controls; let i = index" [formGroupName]="i" class="address-block">
-            <h4>Workflow {{ i + 1 }}</h4>  
-            <div class="form-row">
-                <div class="form-field">
-                    <mat-label>Status</mat-label>
-                    <mat-form-field appearance="outline" class="full-width">
-                        <mat-select formControlName="status" >
-                            <mat-option *ngFor="let s of status" [value]="s">{{ s}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>  
-                <div class="form-field">
-                    <mat-label>Role</mat-label>
-                    <mat-form-field appearance="outline" class="full-width">
-                        <mat-select formControlName="roleIds" [multiple]="true">
-                            <mat-option *ngFor="let r of roles" [value]="r.id">{{ r.roleName }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>    
-        </div>     
-    </div>
-        <button mat-raised-button color="warn" type="submit">Submit</button>
-</form>  
+  </div>
+  <button mat-raised-button color="warn" type="submit">Submit</button>
+</form>
 <div class="table-card" *ngIf="view">
-    <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-mr-2"  (click)="addWorkFlow()">Add WorkFlow</button>
-  <mat-slide-toggle
-  [checked]="statusToggle === 'active'"
-  (change)="onStatusToggleChange($event)">
-  Only show active / deactive
-</mat-slide-toggle>
+  <button
+    pButton
+    icon="pi pi-check"
+    class="p-button-success p-button-sm p-mr-2"
+    (click)="addWorkFlow()"
+  >
+    Add WorkFlow
+  </button>
+  <mat-slide-toggle [checked]="statusToggle === 'active'" (change)="onStatusToggleChange($event)">
+    Only show active / deactive
+  </mat-slide-toggle>
 
-    <div class="table-container">
-<p-table [value]="workFlowsData"  dataKey="id" [loading]="loading"  scrollable="true"   scrollHeight="400px"   [expandedRowKeys]="expandedRows" 
-  (onRowExpand)="onRowExpand($event)"   (onRowCollapse)="onRowCollapse($event)">
-  <ng-template pTemplate="header">
-    <tr>
-      <th style="width: 3em">WorkFlows</th> <!-- Row toggler column -->
-      <th>Module</th>
-      <th>No Of worklows</th>
-      <th>Actions</th>
-    </tr>
-  </ng-template>
+  <div class="table-container">
+    <p-table
+      [value]="workFlowsData"
+      dataKey="id"
+      [loading]="loading"
+      scrollable="true"
+      scrollHeight="400px"
+      [expandedRowKeys]="expandedRows"
+      (onRowExpand)="onRowExpand($event)"
+      (onRowCollapse)="onRowCollapse($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3em">WorkFlows</th>
+          <!-- Row toggler column -->
+          <th>Module</th>
+          <th>No Of worklows</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
 
-  <ng-template pTemplate="body" let-workFlow let-expanded="expanded" let-i="rowIndex">
-    <tr>
-      <!-- Row toggler -->
-      <td>
-        <p-button 
-          type="button"
-          styleClass="black-toggler"
-          pRipple
-          [pRowToggler]="workFlow"
-          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-         
-          [rounded]="true">
-        </p-button>
-      </td>
+      <ng-template pTemplate="body" let-workFlow let-expanded="expanded" let-i="rowIndex">
+        <tr>
+          <!-- Row toggler -->
+          <td>
+            <p-button
+              type="button"
+              styleClass="black-toggler"
+              pRipple
+              [pRowToggler]="workFlow"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              [rounded]="true"
+            >
+            </p-button>
+          </td>
 
-      <td>{{ workFlow.module }}</td>
-      <td>{{ workFlow.noofWorkFlow }}</td>
+          <td>{{ workFlow.module }}</td>
+          <td>{{ workFlow.noofWorkFlow }}</td>
 
-      <!-- Action buttons -->
-        <td>
-          <mat-slide-toggle
-  [checked]="workFlow.status===wfStatusArray[0]"
-  (change)="onStatusChange(workFlow, $event)">{{workFlow.status}}
-</mat-slide-toggle>
-      </td>
-    </tr>
-        </ng-template>
-        <ng-template #expandedrow let-workFlow>
-            <tr>
-                <td colspan="7">
-                    <div class="p-4">
-                        <h5>WorkFlows </h5>
-                        <p-table [value]="workFlow.WorkFlowChildrenByStatus" dataKey="id" >
-                            <ng-template #header>
-                                <tr>
-                                    <th>Status</th>
-                                    <th>Role</th>
-                            </ng-template>
-                           <ng-template pTemplate="body" let-child>
-                             <tr>
-                                <td>{{ child.status }}</td>
-                                <td>{{ child.roles ? child.roles.join(', ') : '' }}</td>
-                            </tr>
+          <!-- Action buttons -->
+          <td>
+            <mat-slide-toggle
+              [checked]="workFlow.status === wfStatusArray[0]"
+              (change)="onStatusChange(workFlow, $event)"
+              >{{ workFlow.status }}
+            </mat-slide-toggle>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #expandedrow let-workFlow>
+        <tr>
+          <td colspan="7">
+            <div class="p-4">
+              <h5>WorkFlows</h5>
+              <p-table [value]="workFlow.WorkFlowChildrenByStatus" dataKey="id">
+                <ng-template #header>
+                  <tr>
+                    <th>Status</th>
+                    <th>Role</th>
+                  </tr></ng-template
+                >
+                <ng-template pTemplate="body" let-child>
+                  <tr>
+                    <td>{{ child.status }}</td>
+                    <td>{{ child.roles ? child.roles.join(', ') : '' }}</td>
+                  </tr>
                 </ng-template>
-                            <ng-template #emptymessage>
-                                <tr>
-                                    <td colspan="6">There are no Flows</td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>  
-          <ng-template #emptymessage>
-            <tr>
-                <td colspan="6">There are no {{ statusToggle}}Flows</td>
-            </tr>
-        </ng-template>
+                <ng-template #emptymessage>
+                  <tr>
+                    <td colspan="6">There are no Flows</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="6">There are no {{ statusToggle }}Flows</td>
+        </tr>
+      </ng-template>
     </p-table>
   </div>
   <!-- Paginator -->
-  <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]" />
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="first"
+    [rows]="rows"
+    [totalRecords]="totalRecords"
+    [rowsPerPageOptions]="[10, 20, 30]"
+  />
 </div>

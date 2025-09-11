@@ -3,26 +3,38 @@ import sequelize from "../config/db.js";
 
 interface FileAttributes {
   id: number;
-  entityType: "vendor" | "customer" | "official" | "bankaccount"|"branch";
+  entityType:
+    | "vendor"
+    | "customer"
+    | "official"
+    | "bankaccount"
+    | "branch"
+    | "expense";
   entityId: number;
   fileName: string;
   size: number;
   content: Buffer;
-  fileType:String;
+  fileType: String;
 }
 
 interface FileOptionalAttributes extends Optional<FileAttributes, "id"> {}
 
-class File extends Model<FileAttributes, FileOptionalAttributes>
+class File
+  extends Model<FileAttributes, FileOptionalAttributes>
   implements FileAttributes
 {
   declare id: number;
-  declare entityType: "vendor" | "customer" | "official" | "bankaccount"|"branch";
+  declare entityType:
+    | "vendor"
+    | "customer"
+    | "official"
+    | "bankaccount"
+    | "branch";
   declare entityId: number;
   declare fileName: string;
   declare size: number;
   declare content: Buffer;
-  declare fileType:String;
+  declare fileType: String;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -54,10 +66,10 @@ File.init(
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
-     fileType: {
+    fileType: {
       type: DataTypes.STRING(150),
       allowNull: false,
-    }
+    },
   },
   {
     sequelize,

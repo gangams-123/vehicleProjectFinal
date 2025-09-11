@@ -14,6 +14,8 @@ import Department from "./department.model.js";
 import Designation from "./designation.model.js";
 import BranchMaster from "./branchMaster.model.js";
 import Official from "./official.model.js";
+import Expense from "./expense.model.js";
+import ExpenseChild from "./expense.child.model.js";
 
 // ----------------------------
 // Vendor ↔ Address
@@ -48,6 +50,7 @@ File.belongsTo(BankAccount, {
 // WorkFlowMain ↔ WorkFlowChild ↔ Roles
 // ----------------------------
 WorkFlowMain.hasMany(WorkFlowChild, {
+  as: "WorkFlowChild",
   foreignKey: "mainId",
   constraints: false,
 });
@@ -78,8 +81,12 @@ BranchMaster.hasMany(File, {
 });
 
 // ----------------------------
-// Official ↔ Address ↔ File
-// ----------------------------
+// Official ↔ Address ↔ File <>  expense child
+// -----------------------------
+
+Expense.hasMany(ExpenseChild, { as: "expenseChild", foreignKey: "expenseId" });
+ExpenseChild.belongsTo(Expense, { foreignKey: "expenseId" });
+
 Official.hasMany(Address, {
   foreignKey: "entityId",
   constraints: false,
@@ -119,6 +126,21 @@ Models.belongsTo(Make, { foreignKey: "makeId" });
 // ----------------------------
 Designation.belongsTo(Department, { foreignKey: "departmentId" });
 
+//------------------------------
+//expense<-> file <-->workflowChild
+
+Expense.hasMany(File, {
+  foreignKey: "entityId",
+  constraints: false,
+  scope: { entityType: "expense" },
+});
+
+Expense.belongsTo(WorkFlowMain, {
+  foreignKey: "workflowId",
+  as: "workflow",
+  constraints: false,
+});
+
 // ----------------------------
 // Cascade Delete Hooks
 // ----------------------------
@@ -155,6 +177,11 @@ BranchMaster.beforeDestroy(async (branch) => {
   await deleteRelatedEntities(branch, "branchmaster");
 });
 
+//expense cleanup
+Expense.beforeDestroy(async (expense) => {
+  await deleteRelatedEntities(expense, "expense");
+});
+
 // ----------------------------
 // Export Everything
 // ----------------------------
@@ -173,4 +200,5 @@ export {
   Designation,
   BranchMaster,
   Official,
+  Expense,
 };

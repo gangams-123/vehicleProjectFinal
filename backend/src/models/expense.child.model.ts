@@ -1,76 +1,73 @@
+// models/model.ts
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/db.js";
-import Roles from "./roles.model.js";
-import WorkFlowMain from "./workFlowMain.model.js";
+import Expense from "./expense.model.js";
+import Official from "./official.model.js";
 
-export interface WorkFlowChildAttributes {
+interface ExpenseChildAttributes {
   id: number;
   status: string;
-  roleId: number;
-  mainId: number;
-  stepOrder: number;
+  officialId: number;
+  expenseId: number;
+  remarks: string;
 }
 
-export interface WorkFlowChildoptionalAttributes
-  extends Optional<WorkFlowChildAttributes, "id"> {}
+interface ExpenseChildOptionalAttributes
+  extends Optional<ExpenseChildAttributes, "id"> {}
 
-class WorkFlowChild
-  extends Model<WorkFlowChildAttributes, WorkFlowChildoptionalAttributes>
-  implements WorkFlowChildAttributes
+class ExpenseChild
+  extends Model<ExpenseChildAttributes, ExpenseChildOptionalAttributes>
+  implements ExpenseChildAttributes
 {
   declare id: number;
   declare status: string;
-  declare roleId: number;
-  declare mainId: number;
-  declare stepOrder: number;
-
+  declare expenseId: number;
+  declare officialId: number;
+  declare remarks: string;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
 
-WorkFlowChild.init(
+ExpenseChild.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
     },
-
     status: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: false,
     },
-
-    roleId: {
+    expenseId: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: Roles, // reference to Make table
+        model: Expense, // reference to Make table
         key: "id", // reference Make.id (makeId)
       },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    mainId: {
+    officialId: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: WorkFlowMain, // reference to Make table
+        model: Official, // reference to Make table
         key: "id", // reference Make.id (makeId)
       },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    stepOrder: {
-      type: DataTypes.INTEGER.UNSIGNED,
+    remarks: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
   {
     sequelize,
-    tableName: "workflowChild",
-    timestamps: true,
+    tableName: "expensechild",
   }
 );
 
-export default WorkFlowChild;
+export default ExpenseChild;

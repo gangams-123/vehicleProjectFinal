@@ -1,34 +1,34 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/db.js";
-import Roles from "./roles.model.js";
+import Department from "./department.model.js";
 import WorkFlowMain from "./workFlowMain.model.js";
-
-export interface WorkFlowChildAttributes {
+//required for typescript for compilation
+interface ExpenseAttributes {
   id: number;
+  amount: number;
+  deptId: number;
   status: string;
-  roleId: number;
-  mainId: number;
   stepOrder: number;
+  workflowId: number;
 }
-
-export interface WorkFlowChildoptionalAttributes
-  extends Optional<WorkFlowChildAttributes, "id"> {}
-
-class WorkFlowChild
-  extends Model<WorkFlowChildAttributes, WorkFlowChildoptionalAttributes>
-  implements WorkFlowChildAttributes
+interface ExpenseCreationAttributes extends Optional<ExpenseAttributes, "id"> {}
+//needed by sequelise to create table
+class Expense
+  extends Model<ExpenseAttributes, ExpenseCreationAttributes>
+  implements ExpenseAttributes
 {
   declare id: number;
+  declare amount: number;
+  declare deptId: number;
   declare status: string;
-  declare roleId: number;
-  declare mainId: number;
   declare stepOrder: number;
-
+  declare workflowId: number;
+  // Timestamps
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
 
-WorkFlowChild.init(
+Expense.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -36,22 +36,29 @@ WorkFlowChild.init(
       primaryKey: true,
     },
 
-    status: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
+    amount: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
     },
-
-    roleId: {
+    deptId: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: Roles, // reference to Make table
+        model: Department, // reference to Make table
         key: "id", // reference Make.id (makeId)
       },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    mainId: {
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    stepOrder: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
+    workflowId: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
@@ -61,16 +68,11 @@ WorkFlowChild.init(
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    stepOrder: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
   },
   {
     sequelize,
-    tableName: "workflowChild",
-    timestamps: true,
+    tableName: "expense",
   }
 );
 
-export default WorkFlowChild;
+export default Expense;
