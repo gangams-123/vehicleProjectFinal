@@ -1,4 +1,3 @@
-
 <div *ngIf="successMessage" class="message success">
   {{ successMessage }}
 </div>
@@ -8,7 +7,9 @@
 </div>
 <div class="table-card">
   <!-- Add Make Button -->
-   <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-mr-2"  (click)="addRow()">Add Designation</button>
+  <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-mr-2" (click)="addRow()">
+    Add Designation
+  </button>
   <hr />
 
   <!-- Table Container -->
@@ -25,41 +26,80 @@
       <ng-template pTemplate="body" let-designation let-i="rowIndex">
         <tr>
           <td>
-           <mat-form-field *ngIf="designation.isNew || designation.isEditing" appearance="outline">
-            <mat-label>Enter Designation Name</mat-label>
-                <input matInput [(ngModel)]="designation.designationName" name="designation-{{ i }}" />
-                </mat-form-field>
-            <span *ngIf="!designation.isNew && !designation.isEditing">{{ designation.designationName }}</span>
+            <mat-form-field *ngIf="designation.isNew || designation.isEditing" appearance="outline">
+              <mat-label>Enter Designation Name</mat-label>
+              <input matInput [(ngModel)]="designation.name" name="designation-{{ i }}" />
+            </mat-form-field>
+            <span *ngIf="!designation.isNew && !designation.isEditing">{{ designation.name }}</span>
           </td>
           <td>
-               <mat-form-field appearance="outline" *ngIf="designation.isNew || designation.isEditing">
-                    <mat-label>Department</mat-label>
-                    <mat-select [(ngModel)]="designation.departmentId" name="department-{{i}}">
-                        <mat-option *ngFor="let m of departments" [value]="m.id">{{ m.departmentName }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                 <span *ngIf="!designation.isNew && !designation.isEditing">{{ designation.Department.departmentName}}</span>
+            <mat-form-field appearance="outline" *ngIf="designation.isNew || designation.isEditing">
+              <mat-label>Department</mat-label>
+
+              <mat-select [(ngModel)]="designation.departmentId" name="department-{{ i }}">
+                <mat-option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div>Selected ID: {{ designation.departmentId }}</div>
+            <div>Options: {{ departments | json }}</div>
+
+            <span *ngIf="!designation.isNew && !designation.isEditing">{{
+              designation.departmentName
+            }}</span>
           </td>
           <td>
             <!-- Save Button -->
-                <div class="action-buttons">
-                  <button *ngIf="designation.isNew || designation.isEditing" label="save" pButton icon="pi pi-check"  class="p-button-success p-button-sm p-mr-10"(click)="saveRow(designation, i)">
-                  </button>
-                  <button *ngIf="designation.isNew || designation.isEditing" pButton type="button" label="Cancel" (click)="cancelEdit(designation, i)" class="p-button-secondary"></button>
-                  <!-- Delete Button -->
-                  <button *ngIf="!designation.isEditing" pButton type="button" label="Edit" (click)="editRow(designation)" class="p-button-info"></button>
-                  <button *ngIf="!designation.isEditing" pButton type="button" label="Delete" (click)="deleteRow(designation.id, i)" class="p-button-danger"></button>
-                </div>   
-            </td>
+            <div class="action-buttons">
+              <button
+                *ngIf="designation.isNew || designation.isEditing"
+                label="save"
+                pButton
+                icon="pi pi-check"
+                class="p-button-success p-button-sm p-mr-10"
+                (click)="saveRow(designation, i)"
+              ></button>
+              <button
+                *ngIf="designation.isNew || designation.isEditing"
+                pButton
+                type="button"
+                label="Cancel"
+                (click)="cancelEdit(designation, i)"
+                class="p-button-secondary"
+              ></button>
+              <!-- Delete Button -->
+              <button
+                *ngIf="!designation.isEditing"
+                pButton
+                type="button"
+                label="Edit"
+                (click)="editRow(designation)"
+                class="p-button-info"
+              ></button>
+              <button
+                *ngIf="!designation.isEditing"
+                pButton
+                type="button"
+                label="Delete"
+                (click)="deleteRow(designation.id, i)"
+                class="p-button-danger"
+              ></button>
+            </div>
+          </td>
         </tr>
       </ng-template>
       <ng-template #emptymessage>
-            <tr>
-                <td colspan="6">There are no designations</td>
-            </tr>
-        </ng-template>
+        <tr>
+          <td colspan="6">There are no designations</td>
+        </tr>
+      </ng-template>
     </p-table>
   </div>
   <!-- Paginator -->
-  <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]" />
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="first"
+    [rows]="rows"
+    [totalRecords]="totalRecords"
+    [rowsPerPageOptions]="[10, 20, 30]"
+  />
 </div>

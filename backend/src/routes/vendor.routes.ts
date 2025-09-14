@@ -1,10 +1,24 @@
 import { Router } from "express";
-import { createVendorWithAddresses,getVendors,getVendorAddresses} from "../controllers/vendors.controller.js"
+import { VendorController } from "../controller/vendor.controller.js";
+import { VendorService } from "../service/vendor.service.js";
+import { AddressService } from "../service/address.service.js";
+import { AppDataSource } from "../data/data-source.js";
+import { Vendor } from "../entity/vendor.js";
+import { Address } from "../entity/address.js";
 
-const vendorRouter = Router();
+export function createVendorRoutes(): Router {
+  const vendorRepo = AppDataSource.getRepository(Vendor);
+  const addressRepo = AppDataSource.getRepository(Address);
 
-vendorRouter.post("/", createVendorWithAddresses);
-vendorRouter.get("/", getVendors);
-vendorRouter.get("/:vendorId/addresses", getVendorAddresses);
+  const addressService = new AddressService(addressRepo);
+  const vendorService = new VendorService(vendorRepo, addressService);
+  const vendorController = new VendorController(vendorService);
 
-export default vendorRouter;
+  const router = Router();
+
+  router.post("/vendors", (req, res) =>
+    vendorController.createVendor(req, res)
+  );
+  router.get("/vendors", (req, res) => vendorController.getVendors(req, res));
+  return router;
+}

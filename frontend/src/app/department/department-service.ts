@@ -4,32 +4,28 @@ import { environment } from '../environment/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DepartmentService {
-  
-constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
   private baseUrl = environment.apiUrl; // ✅ Dynamic base URL
-  private url=`${this.baseUrl}/department`;
+  private url = `${this.baseUrl}/departments`;
 
-   getDepartments(page: number, size: number): Observable<any> {
-    const params = new HttpParams()
-      .set('page', page)
-      .set('size', size);
+  getDepartments(page: number, size: number): Observable<any> {
+    const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<any>(this.url, { params });
   }
-  createDepartment(data:any): Observable<any> {
-    return this.http.post(this.url,data);
+  createDepartment(data: any): Observable<any> {
+    return this.http.post(this.url, data);
   }
-deleteDepartment(id: number): Observable<any> {
-  return this.http.delete(`${this.url}/${id}`);
-}
-updateDepartment(data:any): Observable<any> {
-    return this.http.put(this.url,data);
+  deleteDepartment(id: number): Observable<any> {
+    return this.http.delete(`${this.url}/${id}`);
   }
-    // Fetch all
+  updateDepartment(id: string, data: any): Observable<any> {
+    return this.http.put(`${this.url}/${id}`, data);
+  }
+  // Fetch all
   getAllDepartments(): Observable<any> {
     return this.http.get(`${this.url}/all`);
   }
 }
-

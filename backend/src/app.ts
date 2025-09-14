@@ -1,35 +1,46 @@
-import express from "express";
-import vendorRoutes from "./routes/vendor.routes.js";
-import makeRoutes from "./routes/make.routes.js";
-import accountRouter from "./routes/bankAccount.route.js";
-import modelRouter from "./routes/models.route.js";
-import moduleRouter from "./routes/module.routes.js";
-import roleRouter from "./routes/roles.routes.js";
-import workFlowRouter from "./routes/workFlow.route.js";
-import departmentRouter from "./routes/department.route.js";
-import designationRouter from "./routes/designation.route.js";
-import branchRouter from "./routes/branch.routes.js";
-import officialRouter from "./routes/offcial.route.js";
-import expenseRouter from "./routes/expense.route.js";
+import express, { Application } from "express";
 import cors from "cors";
+import { createWorkFlowRoutes } from "./routes/workFlowRoutes.js";
+import { createBranchRoutes } from "./routes/branch.routes.js";
+import { createDepartmentRoutes } from "./routes/department.routes.js";
+import { createMakeRoutes } from "./routes/make.routes.js";
+import { createAuthRoutes } from "./routes/auth.routes.js";
+import { createDesignationRoutes } from "./routes/designation.routes.js";
+import { createRoleRoutes } from "./routes/role.routes.js";
+export class App {
+  public app: Application;
 
-const app = express();
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+  constructor(private port: number) {
+    this.app = express();
+    this.initializeMiddlewares();
+    this.initializeRoutes();
+    this.start();
+  }
 
-app.use(express.json());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
-app.use("/vendors", vendorRoutes);
-app.use("/make", makeRoutes);
-app.use("/account", accountRouter);
-app.use("/models", modelRouter);
-app.use("/modules", moduleRouter);
-app.use("/roles", roleRouter);
-app.use("/workFlow", workFlowRouter);
-app.use("/department", departmentRouter);
-app.use("/designations", designationRouter);
-app.use("/branch", branchRouter);
-app.use("/official", officialRouter);
-app.use("/expense", expenseRouter);
-export default app;
+  private initializeMiddlewares(): void {
+    this.app.use(
+      cors({
+        origin: "http://localhost:4200", // frontend URL
+        credentials: true, // allow cookies / auth headers
+      })
+    );
+
+    this.app.use(express.json());
+  }
+
+  private initializeRoutes(): void {
+    this.app.use(createWorkFlowRoutes());
+    this.app.use(createBranchRoutes());
+    this.app.use(createDepartmentRoutes());
+    this.app.use(createMakeRoutes());
+    this.app.use(createAuthRoutes());
+    this.app.use(createDesignationRoutes());
+    this.app.use(createRoleRoutes());
+  }
+
+  public start(): void {
+    this.app.listen(this.port, () => {
+      console.log(` Server running on http://localhost:${this.port}`);
+    });
+  }
+}

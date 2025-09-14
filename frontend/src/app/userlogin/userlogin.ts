@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, NgForm, Validators } from '@angular/forms';
-import { FormControl, FormGroup, FormsModule } from '@angular/forms';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { OfficialService } from '../officials/official-service';
+import { UserLoginService } from './userloginservice';
 import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-userlogin',
@@ -19,8 +19,9 @@ export class Userlogin {
 
   constructor(
     private fb: FormBuilder,
-    private officialService: OfficialService,
+    private userLoginService: UserLoginService,
     private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.createLoginForm();
   }
@@ -44,9 +45,8 @@ export class Userlogin {
       return;
     }
     this.loading = true;
-    this.officialService.checkLogin(this.loginForm.value).subscribe({
+    this.userLoginService.checkLogin(this.loginForm.value).subscribe({
       next: (res) => {
-        console.log('returned');
         this.loading = false;
         localStorage.setItem('token', res.token);
         console.log(res);
@@ -59,6 +59,7 @@ export class Userlogin {
         this.loading = false;
         this.errorMessage = err.error.message || 'Login failed';
         alert(this.errorMessage);
+        this.cdr.detectChanges();
       },
     });
   }

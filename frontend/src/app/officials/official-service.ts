@@ -20,7 +20,4 @@ export class OfficialService {
   deleteOfficial(id: number): Observable<any> {
     return this.http.delete(`${this.url}/${id}`);
   }
-  checkLogin(data: any): Observable<any> {
-    return this.http.post(`${this.url}/login`, data);
-  }
 }

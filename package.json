@@ -1,5 +1,0 @@
-{
-  "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2"
-  }
-}
