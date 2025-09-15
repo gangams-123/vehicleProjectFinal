@@ -68,23 +68,18 @@ export class Workflow {
   status: any = Status_Expense;
 
   modules: any = MODULES;
-  numbers: number[] = Array.from({ length: workFlowCount }, (_, i) => i + 1); // Creates [1, 2, 3, 4, 5, 6]
-
+  numbers: number[] = Array.from({ length: workFlowCount }, (_, i) => i + 1);
   constructor(
     private workflowService: WorkflowService,
     private rolesService: RolesService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {}
   onSubmit() {
-    // Set default status
     this.workflowForm.patchValue({ status: workFlowStatus[0] });
-
     const formValue = this.workflowForm.value;
-
-    // Create payload including flattened workFlows
     const payload = {
       module: formValue.module,
       noofWorkFlow: formValue.noofWorkFlow,
@@ -92,9 +87,9 @@ export class Workflow {
       workFlows: [] as { status: string; roleId: number; stepOrder: number }[], // flattened array
     };
 
-    // Flatten each workflow's roleIds into separate entries
     formValue.workFlows?.forEach((wf: any, index: number) => {
       const i = 0;
+      console.log('roleIDs', wf.roleIds);
       wf.roleIds?.forEach((roleId: number) => {
         payload.workFlows.push({
           status: wf.status,
@@ -111,7 +106,7 @@ export class Workflow {
       next: (res) => {
         this.successMessage = res.message;
         this.view = true;
-        this.loadWorkFlows(0, 10, this.statusToggle);
+        this.loadWorkFlows(1, 10, this.statusToggle);
       },
       error: (err) => {
         console.error('Error submitting workflow:', err);
@@ -125,6 +120,15 @@ export class Workflow {
   }
   addWorkFlows(event: MatSelectChange) {
     const numSelected = Number(event.value);
+    this.rolesService.getAllRoles().subscribe({
+      next: (res) => {
+        this.roles = res.data;
+      },
+      error: (err) => {
+        console.error('Error loading roles:', err);
+        this.errorMessage = err.message;
+      },
+    });
     this.workFlowsArray.clear();
     for (let i = 0; i < numSelected; i++) {
       const workFlowGroup = new FormGroup({
@@ -139,7 +143,7 @@ export class Workflow {
 
   loading: boolean = false;
   expandedRows: { [key: string]: boolean } = {};
-  first: number = 0;
+  first: number = 1;
   rows: number = 10;
   flowsLoading: { [workFlowId: string]: boolean } = {};
   roles: any[] = [];
@@ -147,15 +151,6 @@ export class Workflow {
     this.route.queryParams.subscribe((params) => {
       this.view = params['view'] === 'true'; // Ensure it's boolean
       this.loadWorkFlows(this.first, this.rows, this.statusToggle);
-    });
-    this.rolesService.getAllRoles().subscribe({
-      next: (res) => {
-        this.roles = res.items;
-      },
-      error: (err) => {
-        console.error('Error loading roles:', err);
-        this.errorMessage = err.message;
-      },
     });
   }
   checkWorkFlowExists(event: MatSelectChange) {
@@ -196,13 +191,12 @@ export class Workflow {
     this.workflowService.getWorkFlows(first, rows, status).subscribe((data: any) => {
       Promise.resolve().then(() => {
         this.workFlowsData = data.items.map((wf: any) => {
-          // Group roles by status
           const grouped: { [status: string]: string[] } = {};
           wf.WorkFlowChild.forEach((child: any) => {
             if (!grouped[child.status]) {
-              grouped[child.status] = [child.Role.roleName];
+              grouped[child.status] = [child.role.name];
             } else {
-              grouped[child.status].push(child.Role.roleName);
+              grouped[child.status].push(child.role.name);
             }
           });
 

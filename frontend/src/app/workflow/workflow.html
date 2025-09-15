@@ -46,7 +46,7 @@
           <mat-label>Role</mat-label>
           <mat-form-field appearance="outline" class="full-width">
             <mat-select formControlName="roleIds" [multiple]="true">
-              <mat-option *ngFor="let r of roles" [value]="r.id">{{ r.roleName }}</mat-option>
+              <mat-option *ngFor="let r of roles" [value]="r.id">{{ r.name }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>

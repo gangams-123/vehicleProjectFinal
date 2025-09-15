@@ -7,7 +7,9 @@
 </div>
 <div class="table-card">
   <!-- Add Make Button -->
-   <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-mr-2"  (click)="addRow()">Add Roles</button>
+  <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-mr-2" (click)="addRow()">
+    Add Roles
+  </button>
   <hr />
 
   <!-- Table Container -->
@@ -23,28 +25,60 @@
       <ng-template pTemplate="body" let-row let-i="rowIndex">
         <tr>
           <td>
-         
-           <mat-form-field *ngIf="row.isNew || row.isEditing" appearance="outline">
-  <mat-label>Enter Role Name</mat-label>
-  <input matInput [(ngModel)]="row.roleName" name="role-{{ i }}" />
-</mat-form-field>
-            <span *ngIf="!row.isNew && !row.isEditing">{{ row.roleName }}</span>
+            <mat-form-field *ngIf="row.isNew || row.isEditing" appearance="outline">
+              <mat-label>Enter Role Name</mat-label>
+              <input matInput [(ngModel)]="row.name" name="role-{{ i }}" />
+            </mat-form-field>
+            <span *ngIf="!row.isNew && !row.isEditing">{{ row.name }}</span>
           </td>
           <td>
             <!-- Save Button -->
-                <div class="action-buttons">
-                  <button *ngIf="row.isNew || row.isEditing" label="save" pButton icon="pi pi-check"  class="p-button-success p-button-sm p-mr-10"(click)="saveRow(row, i)">
-                  </button>
-                  <button *ngIf="row.isNew || row.isEditing" pButton type="button" label="Cancel" (click)="cancelEdit(row, i)" class="p-button-secondary"></button>
-                  <!-- Delete Button -->
-                  <button *ngIf="!row.isEditing" pButton type="button" label="Edit" (click)="editRow(row)" class="p-button-info"></button>
-                  <button *ngIf="!row.isEditing" pButton type="button" label="Delete" (click)="deleteRow(row.id, i)" class="p-button-danger"></button>
-                </div>   
-            </td>
+            <div class="action-buttons">
+              <button
+                *ngIf="row.isNew || row.isEditing"
+                label="save"
+                pButton
+                icon="pi pi-check"
+                class="p-button-success p-button-sm p-mr-10"
+                (click)="saveRow(row, i)"
+              ></button>
+              <button
+                *ngIf="row.isNew || row.isEditing"
+                pButton
+                type="button"
+                label="Cancel"
+                (click)="cancelEdit(row, i)"
+                class="p-button-secondary"
+              ></button>
+              <!-- Delete Button -->
+              <button
+                *ngIf="!row.isEditing"
+                pButton
+                type="button"
+                label="Edit"
+                (click)="editRow(row)"
+                class="p-button-info"
+              ></button>
+              <button
+                *ngIf="!row.isEditing"
+                pButton
+                type="button"
+                label="Delete"
+                (click)="deleteRow(row.id, i)"
+                class="p-button-danger"
+              ></button>
+            </div>
+          </td>
         </tr>
       </ng-template>
     </p-table>
   </div>
   <!-- Paginator -->
-  <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]" />
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="first"
+    [rows]="rows"
+    [totalRecords]="totalRecords"
+    [rowsPerPageOptions]="[10, 20, 30]"
+  />
 </div>

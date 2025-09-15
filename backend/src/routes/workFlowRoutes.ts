@@ -21,13 +21,13 @@ export function createWorkFlowRoutes(): Router {
 
   router.post("/workflows", (req, res) => workflowController.create(req, res));
   router.get("/workflows", (req, res) => workflowController.getAll(req, res));
-  router.get("/workflows/check/:module/:status", (req, res) =>
+  router.get("/workflows/:module/:status/exists", (req, res) =>
     workflowController.checkExists(req, res)
   );
   router.put("/workflows/status/:mainId", (req, res) =>
     workflowController.changeStatus(req, res)
   );
-  router.get("/workflows/module/:module/status/:status", (req, res) =>
+  router.get("/workflows/:module/:status", (req, res) =>
     workflowController.getByModuleAndStatus(req, res)
   );
 

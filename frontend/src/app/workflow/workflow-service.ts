@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class WorkflowService {
   constructor(private http: HttpClient) {}
   private baseUrl = environment.apiUrl; // ✅ Dynamic base URL
-  private url = `${this.baseUrl}/workFlow`;
+  private url = `${this.baseUrl}/workFlows`;
   getWorkFlows(page: number, size: number, status: string): Observable<any> {
     const params = new HttpParams().set('page', page).set('size', size).set('status', status);
     return this.http.get<any>(this.url, { params });
@@ -24,6 +24,6 @@ export class WorkflowService {
     return this.http.put(`${this.url}/${id}`, { status });
   }
   getWorkflowByStatusByModule(module: string, status: string): Observable<any> {
-    return this.http.get(`${this.url}/${module}/${status}/workflow`);
+    return this.http.get(`${this.url}/${module}/${status}`);
   }
 }

@@ -1,6 +1,6 @@
 // src/branch/branch.service.ts
 
-import { Repository } from "typeorm";
+import { EntityManager, Repository } from "typeorm";
 import { Branch } from "../entity/branch.js";
 import { AddressService } from "../service/address.service.js";
 import { Address, ENTITY_TYPE } from "../entity/address.js";
@@ -22,44 +22,107 @@ export class BranchService {
 
   async createBranchWithAddressAndFiles(
     branchData: Partial<Branch>,
-    addressData: Omit<Partial<Address>, "entityType" | "entityId">,
+    addressData: Omit<Partial<Address>, "entityType" | "entityId">[],
     files: Express.Multer.File[]
-  ): Promise<{ branch: Branch; address: Address }> {
-    // 1. Create branch
-    const branch = this.branchRepository.create(branchData);
-    const savedBranch = await this.branchRepository.save(branch);
+  ): Promise<{ branch: Branch; addresses: Address[] }> {
+    const queryRunner =
+      this.branchRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    // 2. Create address linked to this branch
-    const address = await this.addressService.createAddress(
-      ENTITY_TYPE.BRANCH,
-      savedBranch.id,
-      addressData
-    );
-    for (const file of files) {
-      await this.fileService.createFile(ENTITY_TYPE.BRANCH, branch.id, {
+    try {
+      // Use the transaction's manager for all operations
+      const manager = queryRunner.manager;
+
+      // 1. Create branch
+      const branch = manager.create(Branch, branchData);
+      const savedBranch = await manager.save(branch);
+
+      // 2. Create multiple addresses
+      const addresses = await this.addressService.createAddresses(
+        manager,
+        ENTITY_TYPE.BRANCH,
+        savedBranch.id,
+        addressData
+      );
+
+      // 3. Create multiple files
+      const fileInputs = files.map((file) => ({
         fileName: file.originalname,
         size: file.size,
         content: file.buffer,
         fileType: file.mimetype,
-      });
+      }));
+
+      await this.fileService.createFile(
+        ENTITY_TYPE.BRANCH,
+        savedBranch.id,
+        manager,
+        fileInputs
+      );
+
+      // 4. Commit transaction
+      await queryRunner.commitTransaction();
+
+      return { branch: savedBranch, addresses };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      console.error("Transaction failed:", error);
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
-
-    return { branch: savedBranch, address };
   }
+  async getBranchesPaginated(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{
+    total: number;
+    data: {
+      branch: Branch;
+      addressData: Omit<Address, "entityType" | "entityId">[];
+      file: { id: number; fileName: string }[];
+    }[];
+  }> {
+    const skip = (page - 1) * limit;
 
-  async getBranchWithAddresses(
-    branchId: number
-  ): Promise<{ branch: Branch; addresses: Address[] } | null> {
-    const branch = await this.branchRepository.findOneBy({ id: branchId });
-    if (!branch) return null;
+    const [branches, total] = await this.branchRepository.findAndCount({
+      skip,
+      take: limit,
+      order: { id: "ASC" },
+    });
 
-    const addresses = await this.addressService.getAddressesByEntity(
-      ENTITY_TYPE.BRANCH,
-      branchId
+    const data = await Promise.all(
+      branches.map(async (branch) => {
+        const addresses = await this.addressService.getAddressesByEntity(
+          ENTITY_TYPE.BRANCH,
+          branch.id
+        );
+
+        const filesRaw = await this.fileService.getFilesByEntity(
+          ENTITY_TYPE.BRANCH,
+          branch.id
+        );
+
+        const files = filesRaw.map((f) => ({
+          id: f.id,
+          fileName: f.fileName,
+        }));
+
+        return {
+          branch,
+          addressData: addresses,
+          file: files,
+        };
+      })
     );
 
-    return { branch, addresses };
+    return { total, data };
   }
-
-  // Add other branch logic as needed
+  async getAllBranches(): Promise<{ data: Branch[] }> {
+    const data = await this.branchRepository.find({
+      order: { id: "ASC" },
+    });
+    return { data };
+  }
 }

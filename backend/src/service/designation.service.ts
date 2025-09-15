@@ -32,8 +32,8 @@ export class DesignationService {
       .orderBy("designation.id", "ASC");
 
     const [data, total] = await Promise.all([
-      query.getRawMany(), // 👈 flat objects
-      query.getCount(), // 👈 total count
+      query.getRawMany(),
+      query.getCount(),
     ]);
 
     return { data, total };

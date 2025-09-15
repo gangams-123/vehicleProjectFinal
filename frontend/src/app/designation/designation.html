@@ -40,8 +40,6 @@
                 <mat-option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</mat-option>
               </mat-select>
             </mat-form-field>
-            <div>Selected ID: {{ designation.departmentId }}</div>
-            <div>Options: {{ departments | json }}</div>
 
             <span *ngIf="!designation.isNew && !designation.isEditing">{{
               designation.departmentName

@@ -22,7 +22,7 @@ export class DesignationService {
     return this.http.delete(`${this.url}/${id}`);
   }
   updateDesignation(id: string, data: any): Observable<any> {
-    return this.http.put(`this.url/${id}`, data);
+    return this.http.put(`${this.url}/${id}`, data);
   }
   getDesignationByDept(id: number): Observable<any> {
     return this.http.get(`${this.url}/${id}/departments`);

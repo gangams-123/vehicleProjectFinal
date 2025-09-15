@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class ExpenseTrackerService {
   constructor(private http: HttpClient) {}
   private baseUrl = environment.apiUrl;
-  private url = `${this.baseUrl}/expense`;
+  private url = `${this.baseUrl}/expenses`;
   createExpense(data: FormData): Observable<any> {
     return this.http.post(this.url, data);
   }

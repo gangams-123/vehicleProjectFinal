@@ -1,6 +1,6 @@
 // src/address/address.service.ts
 
-import { Repository } from "typeorm";
+import { EntityManager, Repository } from "typeorm";
 import { Address, EntityType } from "../entity/address.js";
 
 export class AddressService {
@@ -10,18 +10,21 @@ export class AddressService {
     this.addressRepository = addressRepository;
   }
 
-  async createAddress(
+  async createAddresses(
+    manager: EntityManager,
     entityType: EntityType,
     entityId: number,
-    addressData: Omit<Partial<Address>, "entityType" | "entityId">
-  ): Promise<Address> {
-    const address = this.addressRepository.create({
-      ...addressData,
-      entityType,
-      entityId,
-    });
+    addressesData: Omit<Partial<Address>, "entityType" | "entityId">[]
+  ): Promise<Address[]> {
+    const addressEntities = addressesData.map((addr) =>
+      this.addressRepository.create({
+        ...addr,
+        entityType,
+        entityId,
+      })
+    );
 
-    return await this.addressRepository.save(address);
+    return manager.save(addressEntities);
   }
 
   async getAddressesByEntity(
@@ -30,6 +33,7 @@ export class AddressService {
   ): Promise<Address[]> {
     return await this.addressRepository.find({
       where: { entityType, entityId },
+      select: ["street", "country", "state", "city", "postalCode", "id"],
     });
   }
 

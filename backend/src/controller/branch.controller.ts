@@ -1,5 +1,3 @@
-// src/branch/branch.controller.ts
-
 import { Request, Response } from "express";
 import { BranchService } from "../service/branch.service.js";
 
@@ -12,6 +10,7 @@ export class BranchController {
 
   async createBranch(req: Request, res: Response) {
     try {
+      console.log(req.body);
       const branchData = JSON.parse(req.body.branchData);
       const addressData = JSON.parse(req.body.addressData);
 
@@ -29,22 +28,29 @@ export class BranchController {
       res.status(500).json({ error: "Failed to create branch." });
     }
   }
-  // GET /branches/:id
-  async getBranch(req: Request, res: Response) {
+  // GET /branches/:idyed
+  async getBranchPaginated(req: Request, res: Response) {
     try {
-      const id = parseInt(req.params.id);
-      const result = await this.branchService.getBranchWithAddresses(id);
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
 
-      if (!result) {
-        return res.status(404).json({ error: "Branch not found" });
-      }
+      const { total, data } = await this.branchService.getBranchesPaginated(
+        page,
+        limit
+      );
 
-      res.json(result);
+      res.json({ page, limit, total, data });
     } catch (error) {
       console.error("Error fetching branch:", error);
       res.status(500).json({ error: "Failed to fetch branch." });
     }
   }
-
-  // You can add update/delete methods here later
+  async getAllBranches(req: Request, res: Response) {
+    try {
+      const { data } = await this.branchService.getAllBranches();
+      res.json({ data });
+    } catch (error: any) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
 }

@@ -40,4 +40,8 @@ export class RoleService {
     const result = await this.roleRepo.delete(id);
     return { affected: result.affected ?? undefined };
   }
+  async getAllRoles(): Promise<{ data: Role[] }> {
+    const data = await this.roleRepo.find({});
+    return { data };
+  }
 }

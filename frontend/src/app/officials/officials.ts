@@ -120,7 +120,7 @@ export class Officials {
     private designationService: DesignationService,
     private officialService: OfficialService,
     private cdr: ChangeDetectorRef,
-    private rolesService: RolesService,
+    private rolesService: RolesService
   ) {}
   ngOnInit(): void {
     this.countries = Country.getAllCountries();
@@ -195,7 +195,7 @@ export class Officials {
         finalize(() => {
           // this.saving = false;
           this.cdr.detectChanges(); // force Angular to update the template
-        }),
+        })
       )
       .subscribe({
         next: (res) => {
@@ -207,7 +207,7 @@ export class Officials {
   }
   onDepartmentChange(deptId: number) {
     this.designationService.getDesignationByDept(deptId).subscribe((res: any) => {
-      this.designationList = res.items;
+      this.designationList = res.data;
     });
   }
   toggleSameAsPresent(event: any) {
@@ -250,7 +250,10 @@ export class Officials {
     this.countries = Country.getAllCountries();
     this.branchService.getAllBranches().subscribe({
       next: (res) => {
-        this.branchList = res.items; // ✅ Assign only the actual data here
+        console.log(res.data);
+        console.log('branchList is array?', Array.isArray(res.data));
+        console.log('branchList contents:', res.data);
+        this.branchList = res.data;
       },
       error: (err) => {
         console.error('Error fetching officials:', err);
@@ -258,14 +261,14 @@ export class Officials {
     });
     this.departmentService.getAllDepartments().subscribe({
       next: (res) => {
-        this.deptList = res.items; // ✅ Assign only the actual data here
+        this.deptList = res.data;
       },
       error: (err) => {
         console.error('Error fetching departments:', err);
       },
     });
     this.rolesService.getAllRoles().subscribe({
-      next: (res) => (this.roleList = res.items),
+      next: (res) => (this.roleList = res.data),
       error: (err) => console.error('error fetching roles', err),
     });
   }

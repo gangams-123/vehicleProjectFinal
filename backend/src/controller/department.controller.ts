@@ -79,10 +79,9 @@ export class DepartmentController {
   };
   getAllDepartments = async (req: Request, res: Response) => {
     try {
-      console.log("kjff");
       const { data } = await this.departmentService.getDepartmentsPaginated();
 
-      res.json({ data });
+      res.json(data);
     } catch (error: any) {
       res.status(500).json({ error: "Internal Server Error" });
     }

@@ -1,7 +1,7 @@
 // src/file/file.service.ts
 
-import { Repository } from "typeorm";
-import { File, EntityType } from "../entity/file.js";
+import { EntityManager, Repository } from "typeorm";
+import { EntityType, File } from "../entity/file.js"; // adjust path as needed
 
 export class FileService {
   private fileRepo: Repository<File>;
@@ -16,31 +16,32 @@ export class FileService {
   async createFile(
     entityType: EntityType,
     entityId: number,
+    manager: EntityManager,
     fileData: {
       fileName: string;
       size: number;
       content: Buffer;
       fileType: string;
-    }
-  ): Promise<File> {
-    const file = this.fileRepo.create({
-      ...fileData,
-      entityType,
-      entityId,
-    });
+    }[]
+  ): Promise<File[]> {
+    const fileEntities = fileData.map((file) =>
+      this.fileRepo.create({
+        ...file,
+        entityType,
+        entityId,
+      })
+    );
 
-    return this.fileRepo.save(file);
+    return manager.save(fileEntities);
   }
 
-  /**
-   * Get all files for a specific entity
-   */
   async getFilesByEntity(
     entityType: EntityType,
     entityId: number
   ): Promise<File[]> {
     return this.fileRepo.find({
       where: { entityType, entityId },
+      select: ["id", "fileName"], // only file name etc
       order: { createdAt: "DESC" },
     });
   }

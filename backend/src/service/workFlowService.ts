@@ -20,14 +20,16 @@ export class WorkFlowService {
     return await this.dataSource.transaction(async (manager) => {
       const newMain = manager.create(WorkFlowMain, mainData);
       const savedMain = await manager.save(WorkFlowMain, newMain);
-
       if (workFlows?.length) {
         const childEntities = workFlows.map((child: any) =>
           manager.create(WorkFlowChild, {
-            ...child,
-            workFlowMain: savedMain, // sets foreign key via relation
+            status: child.status,
+            stepOrder: child.stepOrder,
+            workFlowMain: savedMain,
+            role: { id: child.roleId },
           })
         );
+
         await manager.save(WorkFlowChild, childEntities);
       }
 
@@ -43,7 +45,7 @@ export class WorkFlowService {
     const [items, total] = await this.mainRepo.findAndCount({
       where: { status },
       relations: {
-        WorkFlowChild: { role: true }, // eager load role relation in child
+        WorkFlowChild: { role: true },
       },
       order: { id: "ASC" },
       skip: (page - 1) * size,
@@ -66,7 +68,9 @@ export class WorkFlowService {
     const workflow = await this.mainRepo.findOne({
       where: { module, status },
       relations: {
-        WorkFlowChild: true,
+        WorkFlowChild: {
+          role: true,
+        },
       },
     });
 
@@ -76,7 +80,6 @@ export class WorkFlowService {
       string,
       { roleId: string; workflowId: number; stepOrder: number }[]
     > = {};
-
     for (const child of workflow.WorkFlowChild || []) {
       if (!grouped[child.status]) {
         grouped[child.status] = [];
@@ -87,7 +90,6 @@ export class WorkFlowService {
         stepOrder: child.stepOrder,
       });
     }
-
     return grouped;
   }
 }

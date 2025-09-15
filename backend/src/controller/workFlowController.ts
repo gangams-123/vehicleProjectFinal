@@ -11,6 +11,7 @@ export class WorkflowController {
   }
   create = async (req: Request, res: Response) => {
     try {
+      console.log(req.body);
       const workflow = await this.workflowService.createWorkFlowWithChild(
         req.body
       );
@@ -26,7 +27,7 @@ export class WorkflowController {
       const page = parseInt((req.query.page as string) ?? "1");
       const size = parseInt((req.query.limit as string) ?? "10");
       const status = req.query.status?.toString() ?? "active";
-
+      console.log("controller", page);
       const result = await this.workflowService.getWorkFlows({
         page,
         size,

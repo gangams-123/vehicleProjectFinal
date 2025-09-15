@@ -36,8 +36,11 @@ export function createBranchRoutes(): Router {
   router.post("/branches", upload.array("files", 5), (req, res) =>
     branchController.createBranch(req, res)
   );
-  router.get("/branches/:id", (req, res) =>
-    branchController.getBranch(req, res)
+  router.get("/branches/all", (req, res) =>
+    branchController.getAllBranches(req, res)
+  );
+  router.get("/branches", (req, res) =>
+    branchController.getBranchPaginated(req, res)
   );
 
   return router;

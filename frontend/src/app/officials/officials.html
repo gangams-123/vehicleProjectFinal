@@ -121,9 +121,7 @@
           appearance="outline"
           (selectionChange)="onDepartmentChange($event.value)"
         >
-          <mat-option *ngFor="let dept of deptList" [value]="dept.id">{{
-            dept.departmentName
-          }}</mat-option>
+          <mat-option *ngFor="let dept of deptList" [value]="dept.id">{{ dept.name }}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -132,7 +130,7 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-select formControlName="designationId">
           <mat-option *ngFor="let desi of designationList" [value]="desi.id">{{
-            desi.designationName
+            desi.name
           }}</mat-option>
         </mat-select>
       </mat-form-field>

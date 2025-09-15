@@ -1,23 +1,20 @@
 // src/controller/role.controller.ts
-
 import { Request, Response } from "express";
 import { RoleService } from "../service/role.service.js";
 
 export class RoleController {
-  private roleService: RoleService;
-  constructor(roleService: RoleService) {
-    this.roleService = roleService;
-  }
-  async createRole(req: Request, res: Response): Promise<void> {
+  constructor(private roleService: RoleService) {}
+
+  createRole = async (req: Request, res: Response): Promise<void> => {
     try {
       const role = await this.roleService.createRole(req.body);
       res.status(201).json(role);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }
-  }
+  };
 
-  async getRoles(req: Request, res: Response): Promise<void> {
+  getRoles = async (req: Request, res: Response): Promise<void> => {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
@@ -26,14 +23,22 @@ export class RoleController {
         page,
         limit
       );
-
       res.json({ page, limit, total, data });
     } catch (error: any) {
       res.status(500).json({ error: "Internal Server Error" });
     }
-  }
+  };
 
-  async getRoleById(req: Request, res: Response): Promise<void> {
+  getAllRoles = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const data = await this.roleService.getAllRoles();
+      res.json(data);
+    } catch (error: any) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  };
+
+  getRoleById = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = parseInt(req.params.id);
       const role = await this.roleService.getRoleById(id);
@@ -45,9 +50,9 @@ export class RoleController {
     } catch (error: any) {
       res.status(400).json({ error: "Invalid ID" });
     }
-  }
+  };
 
-  async updateRole(req: Request, res: Response): Promise<void> {
+  updateRole = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = parseInt(req.params.id);
       const updatedRole = await this.roleService.updateRole(id, req.body);
@@ -59,9 +64,9 @@ export class RoleController {
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }
-  }
+  };
 
-  async deleteRole(req: Request, res: Response): Promise<void> {
+  deleteRole = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = parseInt(req.params.id);
       const result = await this.roleService.deleteRole(id);
@@ -73,5 +78,5 @@ export class RoleController {
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }
-  }
+  };
 }

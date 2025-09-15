@@ -8,6 +8,7 @@ import { Branch } from "../entity/branch.js";
 import { Address } from "../entity/address.js";
 import { Make } from "../entity/make.js";
 import { BankAccount } from "../entity/bakAccount.js";
+import { File } from "../entity/file.js";
 import { WorkFlowMain } from "../entity/workFlowMain.js";
 import { WorkFlowChild } from "../entity/WorkFlowChild.js";
 import { Model } from "../entity/model.js";
@@ -32,7 +33,7 @@ export const AppDataSource = new DataSource({
     Role,
     Branch,
     Address,
-
+    File,
     Make,
     BankAccount,
     WorkFlowMain,
