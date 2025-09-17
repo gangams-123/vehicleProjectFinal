@@ -13,7 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router, RouterModule } from '@angular/router';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Country, State, IState } from 'country-state-city';
@@ -22,6 +22,7 @@ import { DepartmentService } from '../department/department-service';
 import { DesignationService } from '../designation/designation-service';
 import { RolesService } from '../roles/roles-service';
 import { OfficialService } from './official-service';
+import { emailUniqueValidator } from './email-uniqe.validator';
 import { defaultPassword } from '../constants/constants';
 //grid
 import { PaginatorModule } from 'primeng/paginator';
@@ -53,50 +54,17 @@ import { finalize } from 'rxjs';
   styleUrl: './officials.css',
 })
 export class Officials {
-  officialForm = new FormGroup({
-    fName: new FormControl(''),
-    mName: new FormControl(''),
-    lName: new FormControl(''),
-    email: new FormControl(''),
-    gender: new FormControl(''),
-    dob: new FormControl(''),
-    guardianName: new FormControl(''),
-    guardianNum: new FormControl(''),
-    relationship: new FormControl(''),
-    mobile: new FormControl(''),
-    joiningDate: new FormControl(''),
-    basicsal: new FormControl(''),
-    pf: new FormControl(''),
-    esi: new FormControl(''),
-    pfno: new FormControl(''),
-    esino: new FormControl(''),
-    branchId: new FormControl(''),
-    departmentId: new FormControl(''),
-    password: new FormControl(''),
-    designationId: new FormControl(''),
-    roleId: new FormControl(''),
-    addresses: new FormGroup({
-      permanent: new FormGroup({
-        street: new FormControl(''),
-        selCountry: new FormControl(''), // Country dropdown selection
-        country: new FormControl(''), // Country name to save
-        state: new FormControl(''),
-        city: new FormControl(''),
-        postalCode: new FormControl(''),
-        addressType: new FormControl(''),
-      }),
-      present: new FormGroup({
-        street: new FormControl(''),
-        selCountry: new FormControl(''),
-        country: new FormControl(''),
-        state: new FormControl(''),
-        city: new FormControl(''),
-        postalCode: new FormControl(''),
-        addressType: new FormControl(''),
-      }),
-    }),
-    files: new FormArray<FormGroup>([]),
-  });
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private branchService: BranchService,
+    private departmentService: DepartmentService,
+    private designationService: DesignationService,
+    private officialService: OfficialService,
+    private cdr: ChangeDetectorRef,
+    private rolesService: RolesService
+  ) {}
+
   pfBox = false;
   esiBox = false;
   deptList: any[] = [];
@@ -111,18 +79,57 @@ export class Officials {
   perStates: IState[] = [];
   sameAsPresentChecked = false;
   preStates: IState[] = [];
-  constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private branchService: BranchService,
-    private departmentService: DepartmentService,
-    private designationService: DesignationService,
-    private officialService: OfficialService,
-    private cdr: ChangeDetectorRef,
-    private rolesService: RolesService
-  ) {}
+  officialForm!: FormGroup;
   ngOnInit(): void {
+    this.officialForm = new FormGroup({
+      fName: new FormControl(''),
+      mName: new FormControl(''),
+      lName: new FormControl(''),
+      email: new FormControl('', {
+        validators: [Validators.required, Validators.email],
+        asyncValidators: [emailUniqueValidator(this.officialService)],
+        updateOn: 'blur', // validates after user stops editing
+      }),
+      gender: new FormControl(''),
+      dob: new FormControl(''),
+      guardianName: new FormControl(''),
+      guardianNum: new FormControl(''),
+      relationship: new FormControl(''),
+      mobile: new FormControl(''),
+      joiningDate: new FormControl(''),
+      basicsal: new FormControl(''),
+      pf: new FormControl(''),
+      esi: new FormControl(''),
+      pfno: new FormControl(''),
+      esino: new FormControl(''),
+      branchId: new FormControl(''),
+      departmentId: new FormControl(''),
+      password: new FormControl(''),
+      designationId: new FormControl(''),
+      roleId: new FormControl(''),
+      addresses: new FormGroup({
+        permanent: new FormGroup({
+          street: new FormControl(''),
+          selCountry: new FormControl(''), // Country dropdown selection
+          country: new FormControl(''), // Country name to save
+          state: new FormControl(''),
+          city: new FormControl(''),
+          postalCode: new FormControl(''),
+          addressType: new FormControl(''),
+        }),
+        present: new FormGroup({
+          street: new FormControl(''),
+          selCountry: new FormControl(''),
+          country: new FormControl(''),
+          state: new FormControl(''),
+          city: new FormControl(''),
+          postalCode: new FormControl(''),
+          addressType: new FormControl(''),
+        }),
+      }),
+      files: new FormArray<FormGroup>([]),
+    });
+
     this.countries = Country.getAllCountries();
     this.route.queryParams.subscribe((params) => {
       if (params['view'] !== undefined) {
@@ -250,9 +257,6 @@ export class Officials {
     this.countries = Country.getAllCountries();
     this.branchService.getAllBranches().subscribe({
       next: (res) => {
-        console.log(res.data);
-        console.log('branchList is array?', Array.isArray(res.data));
-        console.log('branchList contents:', res.data);
         this.branchList = res.data;
       },
       error: (err) => {
@@ -261,7 +265,8 @@ export class Officials {
     });
     this.departmentService.getAllDepartments().subscribe({
       next: (res) => {
-        this.deptList = res.data;
+        console.log(res);
+        this.deptList = res;
       },
       error: (err) => {
         console.error('Error fetching departments:', err);

@@ -14,7 +14,7 @@ export class OfficialController {
   async createOfficial(req: Request, res: Response) {
     try {
       const officialData = JSON.parse(req.body.officialData); // Assuming sent as JSON string
-      const addressData = JSON.parse(req.body.officialData); // Same here
+      const addressData = JSON.parse(req.body.addressData); // Same here
 
       const files = req.files as Express.Multer.File[];
 
@@ -35,7 +35,7 @@ export class OfficialController {
   async getOfficials(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id);
-      const result = await this.officialService.getOfficialWithAddresses(id);
+      const result = await this.officialService.getOfficialWithAddresses();
 
       if (!result) {
         return res.status(404).json({ error: "official not found" });
@@ -47,4 +47,17 @@ export class OfficialController {
       res.status(500).json({ error: "Failed to fetch official." });
     }
   }
+  checkEmailExists = async (req: Request, res: Response) => {
+    try {
+      const email = req.params.email;
+      const exists = await this.officialService.checkEmailExists(email);
+      if (exists) {
+        return res.status(200).json({ exists: true });
+      } else {
+        return res.status(404).json({ exists: false });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Error checking email" });
+    }
+  };
 }

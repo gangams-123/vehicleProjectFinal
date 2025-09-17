@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class OfficialService {
   constructor(private http: HttpClient) {}
   private baseUrl = environment.apiUrl;
-  private url = `${this.baseUrl}/official`;
+  private url = `${this.baseUrl}/officials`;
   createOfficial(data: FormData): Observable<any> {
     return this.http.post(this.url, data);
   }
@@ -19,5 +19,9 @@ export class OfficialService {
   }
   deleteOfficial(id: number): Observable<any> {
     return this.http.delete(`${this.url}/${id}`);
+  }
+  checkEmailExists(email: string): Observable<any> {
+    const encodedEmail = encodeURIComponent(email);
+    return this.http.get(`${this.url}/email/${encodedEmail}`);
   }
 }

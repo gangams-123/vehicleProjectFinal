@@ -4,7 +4,12 @@
 <div *ngIf="errorMessage" class="message error">
   {{ errorMessage }}
 </div>
-<form [formGroup]="expenseForm" class="form-container" (ngSubmit)="onSubmit()" *ngIf="!view">
+<form
+  [formGroup]="expenseForm"
+  class="form-container"
+  (ngSubmit)="onSubmit()"
+  *ngIf="!view || expenseViewData?.status === rejectStatus"
+>
   <div class="form-row">
     <div class="form-field">
       <label>Details</label>
@@ -79,6 +84,7 @@
     </ng-template>
   </p-table>
 </div>
+
 <div *ngIf="expenseView">
   <!-- Inside *ngIf="expenseView" -->
   <div *ngIf="expenseViewData">
@@ -86,23 +92,21 @@
     <div><strong>Status:</strong> {{ expenseViewData.status }}</div>
 
     <!-- Previous Remarks -->
-    <div *ngIf="expenseViewData.expenseChild?.length > 0">
-      <h3>Previous Remarks</h3>
-      <div *ngFor="let remark of expenseViewData.expenseChild">
+    <div *ngIf="expenseViewData.expenseChildren?.length > 0">
+      <div *ngFor="let remark of expenseViewData.expenseChildren">
         <div><strong>Remarks:</strong></div>
-        <textarea [readonly]="true" rows="3">{{ remark.remarks }}</textarea>
-        <div><strong>Date:</strong> {{ remark.createdAt | date: 'short' }}</div>
+        <p>{{ remark.remarks }}</p>
+        <div><strong>Date:</strong> {{ remark.createdAt | date : 'short' }}</div>
         <hr />
       </div>
     </div>
 
     <!-- Current User Input -->
-    <div>
+    <div *ngIf="expenseViewData.status != rejectStatus">
       <label><strong>Your Remarks:</strong></label>
       <textarea [(ngModel)]="expenseViewData.currentRemarks" rows="3"></textarea>
-
-      <button (click)="approve(expenseViewData)">Approve</button>
-      <button (click)="reject(expenseViewData)">Reject</button>
+      <button (click)="approve(expenseViewData, 'approve')">Approve</button>
+      <button (click)="approve(expenseViewData, 'reject')">Reject</button>
     </div>
   </div>
 </div>

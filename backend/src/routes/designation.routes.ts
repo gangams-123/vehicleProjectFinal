@@ -25,6 +25,9 @@ export function createDesignationRoutes(): Router {
   router.delete("/designations/:id", (req, res) =>
     designationController.deleteDesignation(req, res)
   );
+  router.get("/designations/:departmentId/departments", (req, res) =>
+    designationController.getDesignationsByDeptId(req, res)
+  );
 
   return router;
 }

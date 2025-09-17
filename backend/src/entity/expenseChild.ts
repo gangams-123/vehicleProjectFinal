@@ -19,19 +19,13 @@ export class ExpenseChild {
   @Column({ type: "varchar" })
   status!: string;
 
-  @Column({ type: "int", unsigned: true })
-  expenseId!: number;
-
-  @Column({ type: "int", unsigned: true })
-  officialId!: number;
-
   @Column({ type: "varchar" })
   remarks!: string;
 
   // Two-way ManyToOne to Expense
   @ManyToOne(() => Expense, (expense) => expense.expenseChildren, {
+    nullable: false,
     onDelete: "CASCADE",
-    onUpdate: "CASCADE",
   })
   @JoinColumn({ name: "expenseId" })
   expense!: Expense;

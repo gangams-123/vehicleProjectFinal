@@ -9,7 +9,7 @@ import { tap } from 'rxjs';
 export class WorkflowPermissionService {
   constructor(
     private workflowService: WorkflowService,
-    private workflowPermissionStore: WorkflowPermissionStore,
+    private workflowPermissionStore: WorkflowPermissionStore
   ) {}
   loadPermissions(module: string) {
     return this.workflowService.getWorkflowByStatusByModule(module, workFlowStatus[0]).pipe(
@@ -17,7 +17,7 @@ export class WorkflowPermissionService {
         const currentPermissions = this.workflowPermissionStore.getPermissions();
         currentPermissions[module] = res.data;
         this.workflowPermissionStore.setPermissions(currentPermissions);
-      }),
+      })
     );
   }
 
@@ -27,7 +27,7 @@ export class WorkflowPermissionService {
     const modulePermissions = permissions[module] || {};
     const roleIds = modulePermissions[action] || [];
     let currentRoleId = '';
-    // ✅ Ensure this only runs in the browser
+    // it runs inly in browser else localstorage is undefined
     if (typeof window !== 'undefined' && window.localStorage) {
       currentRoleId = localStorage.getItem('roleId') ?? '';
     }

@@ -15,6 +15,7 @@ export const ENTITY_TYPE = {
   OFFICIAL: "official",
   BANKACCOUNT: "bankaccount",
   BRANCH: "branch",
+  EXPENSE: "expense",
 } as const;
 
 // This still gives you strong typing

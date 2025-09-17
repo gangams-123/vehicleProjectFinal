@@ -7,6 +7,9 @@ import { createMakeRoutes } from "./routes/make.routes.js";
 import { createAuthRoutes } from "./routes/auth.routes.js";
 import { createDesignationRoutes } from "./routes/designation.routes.js";
 import { createRoleRoutes } from "./routes/role.routes.js";
+import { createExpenseRoutes } from "./routes/expense.routes.js";
+import { timeStamp } from "console";
+import { createOfficialRoutes } from "./routes/official.routes.js";
 export class App {
   public app: Application;
 
@@ -36,6 +39,8 @@ export class App {
     this.app.use(createAuthRoutes());
     this.app.use(createDesignationRoutes());
     this.app.use(createRoleRoutes());
+    this.app.use(createExpenseRoutes());
+    this.app.use(createOfficialRoutes());
   }
 
   public start(): void {

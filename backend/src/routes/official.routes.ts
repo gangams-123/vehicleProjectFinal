@@ -40,6 +40,9 @@ export function createOfficialRoutes(): Router {
   router.get("/officials/:id", (req, res) =>
     officialController.getOfficials(req, res)
   );
+  router.get("/officials/email/:email", (req, res) =>
+    officialController.checkEmailExists(req, res)
+  );
 
   return router;
 }

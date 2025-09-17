@@ -16,4 +16,7 @@ export class ExpenseTrackerService {
   getExpensesForApproval(roleId: string, deptId: string): Observable<any> {
     return this.http.get(`${this.url}/${roleId}/${deptId}`);
   }
+  updateExpense(data: any): Observable<any> {
+    return this.http.put(this.url, data);
+  }
 }

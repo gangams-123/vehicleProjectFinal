@@ -10,7 +10,6 @@ export class BranchController {
 
   async createBranch(req: Request, res: Response) {
     try {
-      console.log(req.body);
       const branchData = JSON.parse(req.body.branchData);
       const addressData = JSON.parse(req.body.addressData);
 

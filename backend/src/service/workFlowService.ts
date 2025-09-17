@@ -85,11 +85,12 @@ export class WorkFlowService {
         grouped[child.status] = [];
       }
       grouped[child.status].push({
-        roleId: child.role.toString(),
+        roleId: child.role.id.toString(),
         workflowId: workflow.id,
         stepOrder: child.stepOrder,
       });
     }
+
     return grouped;
   }
 }

@@ -49,7 +49,10 @@ export class Expense {
   @JoinColumn({ name: "workflowId" })
   workflow!: WorkFlowMain;
 
-  @OneToMany(() => ExpenseChild, (expenseChild) => expenseChild.expense)
+  @OneToMany(() => ExpenseChild, (expenseChild) => expenseChild.expense, {
+    cascade: true,
+    eager: true,
+  })
   expenseChildren!: ExpenseChild[];
 
   @CreateDateColumn({ type: "timestamp", select: false })

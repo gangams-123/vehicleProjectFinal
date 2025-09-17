@@ -24,6 +24,15 @@
       <label>Email</label>
       <mat-form-field appearance="outline" class="full-width">
         <input matInput formControlName="email" placeholder="Enter Email" />
+        <mat-error *ngIf="officialForm.get('email')?.hasError('required')"
+          >Email is required</mat-error
+        >
+        <mat-error *ngIf="officialForm.get('email')?.hasError('email')"
+          >Invalid email format</mat-error
+        >
+        <mat-error *ngIf="officialForm.get('email')?.hasError('emailTaken')"
+          >Email already in use</mat-error
+        >
       </mat-form-field>
     </div>
     <div class="form-field">
@@ -139,7 +148,7 @@
       <mat-label>Select Roles</mat-label>
       <mat-form-field appearance="outline" class="full-width">
         <mat-select formControlName="roleId">
-          <mat-option *ngFor="let r of roleList" [value]="r.id">{{ r.roleName }}</mat-option>
+          <mat-option *ngFor="let r of roleList" [value]="r.id">{{ r.name }}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>

@@ -49,7 +49,7 @@ export class Userlogin {
       next: (res) => {
         this.loading = false;
         localStorage.setItem('token', res.token);
-        console.log(res);
+        console.log('result ', res);
         localStorage.setItem('roleId', res.user.roleId.toString());
         localStorage.setItem('deptId', res.user.deptId.toString());
         localStorage.setItem('officialId', res.user.officialId);

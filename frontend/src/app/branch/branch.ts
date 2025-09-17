@@ -139,7 +139,6 @@ export class Branch {
         pinCode: addressGroup.get('pinCode')?.value ?? '',
       },
     ];
-    console.log(address);
     // Convert address object to JSON string
     formData.append('addressData', JSON.stringify(address));
     this.selectedFiles.forEach((file) => {

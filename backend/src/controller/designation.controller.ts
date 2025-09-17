@@ -85,4 +85,13 @@ export class DesignationController {
       res.status(400).json({ error: error.message });
     }
   }
+  async getDesignationsByDeptId(req: Request, res: Response) {
+    try {
+      const deptId = parseInt(req.params.departmentId);
+      const data = await this.designationService.getDesignationByDeptId(deptId);
+      res.json({ data });
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }

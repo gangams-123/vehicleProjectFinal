@@ -55,4 +55,15 @@ export class DesignationService {
     const result = await this.designationRepo.delete(id);
     return { affected: result.affected ?? undefined };
   }
+  async getDesignationByDeptId(deptId: number): Promise<Designation[]> {
+    const designations = await this.designationRepo.find({
+      where: {
+        department: {
+          id: deptId,
+        },
+      },
+    });
+
+    return designations;
+  }
 }
