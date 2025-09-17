@@ -130,7 +130,6 @@ export class Officials {
       files: new FormArray<FormGroup>([]),
     });
 
-    this.countries = Country.getAllCountries();
     this.route.queryParams.subscribe((params) => {
       if (params['view'] !== undefined) {
         this.view = params['view'] == 'true';
@@ -157,32 +156,32 @@ export class Officials {
 
     // 1. Get form value
     const formValue = this.officialForm.getRawValue();
+    const officialData = {
+      fName: formValue.fName ?? '',
+      mName: formValue.mName ?? '',
+      lName: formValue.lName ?? '',
+      email: formValue.email ?? '',
+      gender: formValue.gender ?? '',
+      dob: formValue.dob ?? '',
+      guardianName: formValue.guardianName ?? '',
+      guardianNum: formValue.guardianNum ?? '',
+      relationship: formValue.relationship ?? '',
+      mobile: formValue.mobile ?? '',
+      joiningDate: formValue.joiningDate ?? '',
+      basicsal: formValue.basicsal ?? '',
+      pf: formValue.pf ?? '',
+      esi: formValue.esi ?? '',
+      pfno: formValue.pfno ?? '',
+      esino: formValue.esino ?? '',
+      branchId: formValue.branchId ?? '',
+      departmentId: formValue.departmentId ?? '',
+      designationId: formValue.designationId ?? '',
+      roleId: formValue.roleId ?? '',
+      password: defaultPassword,
+    };
 
-    // 2. Append top-level simple fields
-    formData.append('fName', formValue.fName ?? '');
-    formData.append('mName', formValue.mName ?? '');
-    formData.append('lName', formValue.lName ?? '');
-    formData.append('email', formValue.email ?? '');
-    formData.append('gender', formValue.gender ?? '');
-    formData.append('dob', formValue.dob ?? '');
-    formData.append('guardianName', formValue.guardianName ?? '');
-    formData.append('guardianNum', formValue.guardianNum ?? '');
-    formData.append('relationship', formValue.relationship ?? '');
-    formData.append('mobile', formValue.mobile ?? '');
-    formData.append('joiningDate', formValue.joiningDate ?? '');
-    formData.append('basicsal', formValue.basicsal ?? '');
-    formData.append('pf', formValue.pf ?? '');
-    formData.append('esi', formValue.esi ?? '');
-    formData.append('pfno', formValue.pfno ?? '');
-    formData.append('esino', formValue.esino ?? '');
-    formData.append('branchId', formValue.branchId ?? '');
-    formData.append('departmentId', formValue.departmentId ?? '');
-    formData.append('designationId', formValue.designationId ?? '');
-    formData.append('roleId', formValue.roleId ?? '');
-    console.log(formValue.designationId ?? '');
     if (formValue.addresses?.permanent) formValue.addresses.permanent.addressType = 'permanent';
     if (formValue.addresses?.present) formValue.addresses.present.addressType = 'present';
-    formData.append('password', defaultPassword);
 
     console.log(JSON.stringify(formValue.addresses));
     // 3. Append nested Address object
@@ -190,8 +189,8 @@ export class Officials {
     const addressesArray = [formValue.addresses.permanent, formValue.addresses.present];
 
     // Append as JSON
-
-    formData.append('addresses', JSON.stringify(addressesArray));
+    formData.append('officialData', JSON.stringify(officialData));
+    formData.append('addressData', JSON.stringify(addressesArray));
     //append files
     this.selectedFiles.forEach((file) => {
       formData.append('files', file);

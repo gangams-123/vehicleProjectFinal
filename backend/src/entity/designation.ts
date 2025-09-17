@@ -12,7 +12,7 @@ import { Department } from "./department.js";
 @Entity("designation")
 export class Designation {
   @PrimaryGeneratedColumn({ type: "int", unsigned: true })
-  id!: number; // Notice the '!' here
+  id!: number;
 
   @Column("varchar", { length: 100 })
   name!: string;

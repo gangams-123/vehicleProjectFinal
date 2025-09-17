@@ -13,8 +13,8 @@ export class OfficialController {
   // POST /branches
   async createOfficial(req: Request, res: Response) {
     try {
-      const officialData = JSON.parse(req.body.officialData); // Assuming sent as JSON string
-      const addressData = JSON.parse(req.body.addressData); // Same here
+      const officialData = JSON.parse(req.body.officialData);
+      const addressData = JSON.parse(req.body.addressData);
 
       const files = req.files as Express.Multer.File[];
 
@@ -31,7 +31,7 @@ export class OfficialController {
       res.status(500).json({ error: "Failed to create official." });
     }
   }
-  // GET /branches/:id
+
   async getOfficials(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id);

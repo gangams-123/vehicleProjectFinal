@@ -82,7 +82,7 @@ export class OfficialService {
   }
   private async sendWelcomeEmail(
     email: string,
-    firstName: string,
+    name: string,
     password: string
   ) {
     const transporter = nodemailer.createTransport({
