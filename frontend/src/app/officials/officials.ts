@@ -200,7 +200,7 @@ export class Officials {
       .pipe(
         finalize(() => {
           // this.saving = false;
-          this.cdr.detectChanges(); // force Angular to update the template
+          this.cdr.detectChanges();
         })
       )
       .subscribe({

@@ -16,7 +16,6 @@ export class ExpenseService {
     this.dataSource = dataSource;
     this.expenseRepo = dataSource.getRepository(Expense);
     this.fileService = fileService;
-    // this.childRepo = dataSource.getRepository(ExpenseChild);
   }
 
   async createExpense(

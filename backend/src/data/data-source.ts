@@ -7,7 +7,7 @@ import { Role } from "../entity/role.js";
 import { Branch } from "../entity/branch.js";
 import { Address } from "../entity/address.js";
 import { Make } from "../entity/make.js";
-import { BankAccount } from "../entity/bakAccount.js";
+import { BankAccount } from "../entity/bankAccount.js";
 import { File } from "../entity/file.js";
 import { WorkFlowMain } from "../entity/workFlowMain.js";
 import { WorkFlowChild } from "../entity/WorkFlowChild.js";

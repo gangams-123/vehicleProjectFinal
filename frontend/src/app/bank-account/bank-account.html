@@ -6,155 +6,201 @@
   {{ errorMessage }}
 </div>
 
-
-<form  class="form-container" [formGroup]="accountForm" (ngSubmit)="onSubmit()" *ngIf="!view">
-    <div class="form-row">
-        <div class="form-field">
-            <mat-label>Account Number :</mat-label>
-            <mat-form-field appearance="outline" class="full-width">
-                <input matInput formControlName="accountNo" placeholder="Enter Account Number">
-            </mat-form-field>
-        </div>
-        <div class="form-field">
-            <mat-label>Bank Name :</mat-label>
-            <mat-form-field appearance="outline" class="full-width">
-                <input matInput formControlName="bankName" placeholder="Enter Bank name">
-            </mat-form-field>
-        </div>
-         <div class="form-field">
-             <mat-label>IFSC Code :</mat-label>
-            <mat-form-field appearance="outline" class="full-width">
-                <input matInput formControlName="ifscCode" placeholder="Enter Ifsc Code">
-            </mat-form-field>
-        </div>
-    </div> 
-    <div class="form-row">
-         <div class="form-field">
-            <mat-label>Address of the Branch</mat-label>
-            <mat-form-field appearance="outline" class="full-width">
-                <input matInput formControlName="address" placeholder="Enter bank address ">
-            </mat-form-field>
-        </div>
-             <div class="form-field">
-            <mat-label>Total Amount</mat-label>
-            <mat-form-field appearance="outline" class="full-width">
-                <input matInput formControlName="totalAmount" placeholder="Enter total amount">
-            </mat-form-field>
-        </div>
-    </div> 
-     <!-- File upload -->
- <div class="form-row">
-  <div class="form-field">
-    <label>Upload Files</label>
-    <mat-card class="upload-card">
-      <input type="file" hidden #fileInput (change)="onFilesSelected($event)" multiple>
-      <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">Choose Files</button>
-      <div *ngIf="selectedFiles.length > 0" class="file-list">
-        <div *ngFor="let file of selectedFiles"> {{ file.name }} </div>
-      </div>
-         <!-- Show already uploaded files -->
-    <div *ngIf="existingFiles.length > 0" class="file-list">
-      <div *ngFor="let file of existingFiles">
-        {{ file.name }}
-        <!-- optional delete -->
-        <button mat-icon-button color="warn" type="button" (click)="removeExistingFile(file.id)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
+<form class="form-container" [formGroup]="accountForm" (ngSubmit)="onSubmit()" *ngIf="!view">
+  <div class="form-row">
+    <div class="form-field">
+      <mat-label>Account Number :</mat-label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="accountNo" placeholder="Enter Account Number" />
+      </mat-form-field>
     </div>
-    </mat-card>
+    <div class="form-field">
+      <mat-label>Bank Name :</mat-label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="bankName" placeholder="Enter Bank name" />
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+      <mat-label>IFSC Code :</mat-label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="ifscCode" placeholder="Enter Ifsc Code" />
+      </mat-form-field>
+    </div>
   </div>
-</div>
-<div class="form-row submit-row">
-<button mat-raised-button color="warn" type="submit" [disabled]="saving" style="display:flex; align-items:center; gap:0.5rem;">
-  <mat-progress-spinner *ngIf="saving" diameter="20" mode="indeterminate" [strokeWidth]="3"></mat-progress-spinner>
-  <span>{{ saving ? 'Saving...' : 'Submit' }}</span>
-</button>
-
-</div>
-</form>   
+  <div class="form-row">
+    <div class="form-field">
+      <mat-label>Address of the Branch</mat-label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="address" placeholder="Enter bank address " />
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+      <mat-label>Total Amount</mat-label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="totalAmount" placeholder="Enter total amount" />
+      </mat-form-field>
+    </div>
+  </div>
+  <!-- File upload -->
+  <div class="form-row">
+    <div class="form-field">
+      <label>Upload Files</label>
+      <mat-card class="upload-card">
+        <input type="file" hidden #fileInput (change)="onFilesSelected($event)" multiple />
+        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">
+          Choose Files
+        </button>
+        <div *ngIf="selectedFiles.length > 0" class="file-list">
+          <div *ngFor="let file of selectedFiles">{{ file.name }}</div>
+        </div>
+        <!-- Show already uploaded files -->
+        <div *ngIf="existingFiles.length > 0" class="file-list">
+          <div *ngFor="let file of existingFiles">
+            {{ file.name }}
+            <!-- optional delete -->
+            <button
+              mat-icon-button
+              color="warn"
+              type="button"
+              (click)="removeExistingFile(file.id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="form-row submit-row">
+    <button
+      mat-raised-button
+      color="warn"
+      type="submit"
+      [disabled]="saving"
+      style="display: flex; align-items: center; gap: 0.5rem"
+    >
+      <mat-progress-spinner
+        *ngIf="saving"
+        diameter="20"
+        mode="indeterminate"
+        [strokeWidth]="3"
+      ></mat-progress-spinner>
+      <span>{{ saving ? 'Saving...' : 'Submit' }}</span>
+    </button>
+  </div>
+</form>
 <div class="table-card" *ngIf="view">
-    <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-mr-2"  (click)="addAccount()">Add Account</button>
-    <div class="table-container">
-<p-table 
-  [value]="accounts" 
-  dataKey="id" 
-  scrollable="true" 
-  scrollHeight="400px" 
-  [expandedRowKeys]="expandedRows" 
-  (onRowExpand)="onRowExpand($event)" 
-  (onRowCollapse)="onRowCollapse($event)">
+  <button
+    pButton
+    icon="pi pi-check"
+    class="p-button-success p-button-sm p-mr-2"
+    (click)="addAccount()"
+  >
+    Add Account
+  </button>
+  <div class="table-container">
+    <p-table
+      [value]="accounts"
+      dataKey="id"
+      scrollable="true"
+      scrollHeight="400px"
+      [expandedRowKeys]="expandedRows"
+      (onRowExpand)="onRowExpand($event)"
+      (onRowCollapse)="onRowCollapse($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3em">Documents</th>
+          <!-- Row toggler column -->
+          <th>Account No</th>
+          <th>Bank Name</th>
+          <th>IFSC</th>
+          <th>Address</th>
+          <th>Total Amount</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
 
-  <ng-template pTemplate="header">
-    <tr>
-      <th style="width: 3em">Documents</th> <!-- Row toggler column -->
-      <th>Account No</th>
-      <th>Bank Name</th>
-      <th>IFSC</th>
-      <th>Address</th>
-      <th>Total Amount</th>
-      <th>Actions</th>
-    </tr>
-  </ng-template>
+      <ng-template pTemplate="body" let-account let-expanded="expanded" let-i="rowIndex">
+        <tr>
+          <!-- Row toggler -->
+          <td>
+            <p-button
+              type="button"
+              styleClass="black-toggler"
+              pRipple
+              [pRowToggler]="account"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              [rounded]="true"
+            >
+            </p-button>
+          </td>
 
-  <ng-template pTemplate="body" let-account let-expanded="expanded" let-i="rowIndex">
-    <tr>
-      <!-- Row toggler -->
-      <td>
-        <p-button 
-          type="button"
-          styleClass="black-toggler"
-          pRipple
-          [pRowToggler]="account"
-          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-         
-          [rounded]="true">
-        </p-button>
-      </td>
+          <td>{{ account.accountNo }}</td>
+          <td>{{ account.bankName }}</td>
+          <td>{{ account.ifscCode }}</td>
+          <td>{{ account.address }}</td>
+          <td>{{ account.totalAmount }}</td>
 
-      <td>{{ account.accountNo }}</td>
-      <td>{{ account.bankName }}</td>
-      <td>{{ account.ifscCode }}</td>
-      <td>{{ account.address }}</td>
-      <td>{{ account.totalAmount }}</td>
+          <!-- Action buttons -->
+          <td>
+            <button
+              pButton
+              label="Edit"
+              class="p-button-info p-mr-2"
+              (click)="editAccount(account)"
+            ></button>
+            <button
+              pButton
+              label="Delete"
+              class="p-button-danger"
+              (click)="deleteAccount(account.id, i)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #expandedrow let-account>
+        <tr>
+          <td colspan="7">
+            <div class="p-4">
+              <h5>Dcouments</h5>
+              <p-table [value]="account.file" dataKey="id">
+                <ng-template #header>
+                  <tr>
+                    <th>File Name</th>
+                  </tr></ng-template
+                >
 
-      <!-- Action buttons -->
-      <td>
-        <button pButton label="Edit" class="p-button-info p-mr-2" (click)="editAccount(account)"></button>
-        <button pButton label="Delete" class="p-button-danger" (click)="deleteAccount(account.id,i)"></button>
-      </td>
-    </tr>
-        </ng-template>
-        <ng-template #expandedrow let-vendor>
-            <tr>
-                <td colspan="7">
-                    <div class="p-4">
-                        <h5>Dcouments </h5>
-                        <p-table [value]="vendor.Files" dataKey="id" >
-                            <ng-template #header>
-                                <tr>
-                                    <th>File Name</th>
-                            </ng-template>
-                            <ng-template #body let-file>
-                                <tr>
-                                    <td><a href="#" (click)="openFile(file.id, $event)">{{ file.fileName }}</a></td>
-                                </tr>
-                            </ng-template>
-                            <ng-template #emptymessage>
-                                <tr>
-                                    <td colspan="6">There are no documents</td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>  
+                <ng-template #body let-file>
+                  <tr>
+                    <td>
+                      <a href="#" (click)="openFile(file.id, $event)">{{ file.fileName }}</a>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template #emptymessage>
+                  <tr>
+                    <td colspan="6">There are no documents</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
     </p-table>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="6">There are no accounts</td>
+      </tr>
+    </ng-template>
   </div>
   <!-- Paginator -->
-  <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]" />
-</div> 
-   
-            
-                  
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="first"
+    [rows]="rows"
+    [totalRecords]="totalRecords"
+    [rowsPerPageOptions]="[10, 20, 30]"
+  />
+</div>
