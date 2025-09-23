@@ -19,20 +19,35 @@ export class VendorService {
 
   async createVendorWithAddress(
     vendorData: Partial<Vendor>,
-    addressData: Omit<Partial<Address>, "entityType" | "entityId">
-  ): Promise<{ vendor: Vendor; address: Address }> {
-    // 1. Create branch
-    const vendor = this.vendorRepository.create(vendorData);
-    const savedVendor = await this.vendorRepository.save(vendor);
+    addressData: Omit<Partial<Address>, "entityType" | "entityId">[]
+  ): Promise<{ vendor: Vendor; address: Address[] }> {
+    const queryRunner =
+      this.vendorRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    // 2. Create address linked to this branch
-    const address = await this.addressService.createAddress(
-      ENTITY_TYPE.VENDOR,
-      savedVendor.id,
-      addressData
-    );
+    try {
+      // Use the transaction's manager for all operations
+      const manager = queryRunner.manager;
+      const vendor = this.vendorRepository.create(vendorData);
+      const savedVendor = await this.vendorRepository.save(vendor);
 
-    return { vendor: savedVendor, address };
+      // 2. Create address linked to this branch
+      const address = await this.addressService.createAddresses(
+        manager,
+        ENTITY_TYPE.VENDOR,
+        vendor.id,
+        addressData
+      );
+      await queryRunner.commitTransaction();
+      return { vendor: savedVendor, address };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      console.error("Transaction failed:", error);
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async getVendorWithAddresses(

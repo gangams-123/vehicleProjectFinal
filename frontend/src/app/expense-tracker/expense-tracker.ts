@@ -16,7 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ExpenseTrackerService } from './expense-tracker-service';
 import { ActivatedRoute } from '@angular/router';
 //for grid
-import { TableModule, TableRowCollapseEvent, TableRowExpandEvent } from 'primeng/table';
+import { TableModule } from 'primeng/table';
 @Component({
   selector: 'app-expense-tracker',
   imports: [

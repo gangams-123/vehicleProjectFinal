@@ -1,0 +1,27 @@
+# Node modules - never needed in image
+node_modules
+
+# Build output - will be rebuilt inside container
+dist
+
+# Environment files (optional, depending on use)
+.env
+.env.*
+
+# OS / IDE files
+.DS_Store
+.vscode
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Git
+.git
+.gitignore
+
+# Docker config files (optional)
+Dockerfile
+.dockerignore

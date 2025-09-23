@@ -4,10 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+   "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
+    "test": "ng test"
   },
   "prettier": {
     "printWidth": 100,
@@ -30,17 +29,15 @@
     "@angular/forms": "^20.2.0",
     "@angular/material": "^20.2.0",
     "@angular/platform-browser": "^20.2.0",
-    "@angular/platform-server": "^20.2.0",
     "@angular/router": "^20.2.0",
-    "@angular/ssr": "^20.2.0",
     "@primeuix/themes": "^1.2.3",
-    "@types/express": "^5.0.3",
     "country-state-city": "^3.2.1",
     "primeng": "^20.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+     "@angular-devkit/build-angular": "20.3.1",
     "@angular/build": "^20.2.0",
     "@angular/cli": "^20.2.0",
     "@angular/compiler-cli": "^20.2.0",

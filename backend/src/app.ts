@@ -17,7 +17,6 @@ export class App {
     this.app = express();
     this.initializeMiddlewares();
     this.initializeRoutes();
-    this.start();
   }
 
   private initializeMiddlewares(): void {

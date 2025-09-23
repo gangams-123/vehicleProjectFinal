@@ -12,7 +12,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router';
-import { Router, RouterModule } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { RouterModule } from '@angular/router';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -49,6 +50,7 @@ import { finalize } from 'rxjs';
     //for grid
     PaginatorModule,
     TableModule,
+    ButtonModule,
   ],
   templateUrl: './officials.html',
   styleUrl: './officials.css',
@@ -131,10 +133,14 @@ export class Officials {
     });
 
     this.route.queryParams.subscribe((params) => {
-      if (params['view'] !== undefined) {
-        this.view = params['view'] == 'true';
+      console.log(params['view']);
+      if (params['view'] == 'true') {
+        this.view = true;
       }
     });
+    if (this.view) {
+      // this.lo
+    }
   }
   toggleTextbox() {
     this.pfBox = true;

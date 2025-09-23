@@ -87,7 +87,7 @@ export class WorkFlowService {
       grouped[child.status].push({
         roleId: child.role.id.toString(),
         workflowId: workflow.id,
-        stepOrder: child.stepOrder,
+        stepOrder: child.stepOrder!,
       });
     }
 

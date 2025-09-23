@@ -11,7 +11,7 @@ import {
 import { Department } from "./department.js";
 import { Designation } from "./designation.js";
 import { Role } from "./role.js";
-import { Branch } from "./branch";
+import { Branch } from "./branch.js";
 
 @Entity({ name: "official" })
 export class Official {

@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-import { Expense } from "./expense.js";
+import type { Expense } from "./expense.js";
 import { Official } from "./official.js";
 
 @Entity({ name: "expensechild" })
@@ -23,10 +23,11 @@ export class ExpenseChild {
   remarks!: string;
 
   // Two-way ManyToOne to Expense
-  @ManyToOne(() => Expense, (expense) => expense.expenseChildren, {
-    nullable: false,
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(
+    () => require("./expenseChild.js.js").Expense, // ✅ use require for runtime reference
+    (main: Expense) => main.expenseChildren,
+    { onDelete: "CASCADE" }
+  )
   @JoinColumn({ name: "expenseId" })
   expense!: Expense;
 

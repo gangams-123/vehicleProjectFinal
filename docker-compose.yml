@@ -1,0 +1,36 @@
+services:
+  backend:
+    build: ./backend
+    container_name: express_app
+    env_file:
+      - ./backend/.env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    volumes:
+      - ./wait-for-it.sh:/app/wait-for-it.sh  
+    
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: angular_app
+    ports:
+      - "4000:80"
+    restart: always
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    env_file:
+      - ./backend/.env
+  
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  mysql_data:

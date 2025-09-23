@@ -11,6 +11,7 @@ import {
 
 import { Department } from "./department.js";
 import { WorkFlowMain } from "./workFlowMain.js";
+import type { IExpenseChild } from "../types/IExpenseChild.js";
 import { ExpenseChild } from "./expenseChild.js";
 
 @Entity({ name: "expense" })
@@ -49,11 +50,12 @@ export class Expense {
   @JoinColumn({ name: "workflowId" })
   workflow!: WorkFlowMain;
 
-  @OneToMany(() => ExpenseChild, (expenseChild) => expenseChild.expense, {
-    cascade: true,
-    eager: true,
-  })
-  expenseChildren!: ExpenseChild[];
+  @OneToMany(
+    () => ExpenseChild, // ✅ Synchronous, no Promise
+    (child) => child.expense,
+    { cascade: true }
+  )
+  expenseChildren?: IExpenseChild[];
 
   @CreateDateColumn({ type: "timestamp", select: false })
   createdAt!: Date;

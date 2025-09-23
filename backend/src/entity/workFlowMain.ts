@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
+import type { IWorkFlowChild } from "../types/IWorkflowChild.js";
 import { WorkFlowChild } from "./WorkFlowChild.js";
 
 @Entity("workflowmain")
@@ -23,11 +24,10 @@ export class WorkFlowMain {
 
   @Column({ type: "varchar", length: 20 })
   status!: string;
-
   @OneToMany(() => WorkFlowChild, (child) => child.workFlowMain, {
     cascade: true,
   })
-  WorkFlowChild?: WorkFlowChild[];
+  WorkFlowChild?: IWorkFlowChild[];
 
   @CreateDateColumn({ type: "timestamp", select: false })
   createdAt!: Date;

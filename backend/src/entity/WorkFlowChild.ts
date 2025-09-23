@@ -6,10 +6,9 @@ import {
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn,
 } from "typeorm";
 import { Role } from "./role.js";
-import { WorkFlowMain } from "./workFlowMain.js";
+import type { WorkFlowMain } from "./workFlowMain.js";
 
 @Entity("workflowchild")
 export class WorkFlowChild {
@@ -29,11 +28,15 @@ export class WorkFlowChild {
   @JoinColumn({ name: "roleId" })
   role!: Role;
 
-  @ManyToOne(() => WorkFlowMain, (workFlowMain) => workFlowMain.WorkFlowChild, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  })
+  @ManyToOne(
+    // Lazy function returning class, avoids circular import
+    (): typeof WorkFlowMain => require("./workFlowMain.js").WorkFlowMain,
+    (main: WorkFlowMain) => main.WorkFlowChild,
+    { onDelete: "CASCADE" }
+  )
+  @JoinColumn({ name: "workFlowMainId" })
   workFlowMain!: WorkFlowMain;
+
   @CreateDateColumn({ type: "timestamp", select: false })
   createdAt!: Date;
 
